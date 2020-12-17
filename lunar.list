@@ -1,0 +1,82 @@
+
+	sc = 32 :rem screen indent
+	? chr$(147) "\x11"
+	? tab(sc) "lunar"
+	? tab(sc/2) "\x11\x11creative computing   morristown, new jersey"
+	? "\x11\x11\x11\x11this is a computer simulation of an apollo lunar"
+	? "landing capsule."
+	? "\x11\x11\x11the on-board computer has failed (it was made by"
+	? "xerox) so you have to land the capsule manually.\x11"
+
+{:brief instructions}
+	? "set burn rate of retro rockets to any value between"
+	? "0 (free fall) and 200 (maximum burn) pounds per second."
+	? "set new burn rate every 10 seconds."
+	? "\x11capsule weight 32,500 lbs; fuel weight 16,500 lbs."
+	? "\x11\x11\x11good luck"
+
+	l%=0 :rem seconds elapsed
+	? "\x11 sec", " km", " kph", "lb fuel", "burn rate\x11"
+	
+	a=120 :v=1 :m=33000 :n=16500 :g=.001 :z=1.8
+
+{:show update}
+	? l%, int(1.6*a), int(1.6*3600*v),m-n,:input k :t=10
+
+{:after update}
+	if m-n<.001 goto {:fuel gone}
+	if t<.001   goto {:show update}
+	s=t :if m>=n+s*k goto {:skip-the-next-thing}
+	s=(m-n)/k
+
+{:skip-the-next-thing}
+	gosub {:calc420} :if i<=0 goto {:calc340loop}
+	if v<=0 goto {:skip-j}	
+	if j<0 goto {:calc370}
+
+{:skip-j}
+	gosub {:calc330} :goto {:after update}
+
+{:fuel gone}
+	? "\x11fuel out at" l% "seconds" :s=(-v+sqr(v*v+2*a*g))/g
+	v=v+g*s :l%=l%+s
+
+{:on moon}
+	w=1.6*3600*v :? "\x11on moon at" l% "seconds - impact velocity" int(w) "kph"
+	if w<=1.2 then ? "perfect landing!" :goto {:try again}
+	if w<=10  then ? "good landing (could be better)" :goto {:try again}
+	if w>60 then {:no survivors}
+
+	? "\x11craft damage... you're stranded here until a rescue"
+	? "party arrives.  hope you have enough oxygen!"
+	goto {:try again}
+
+{:no survivors}
+	? "\x11sorry there were no survivors.  you blew it!"
+	? "in fact, you blasted a new lunar crater" w*.052768 "meters deep!"
+	goto {:try again}
+
+{:calc330}
+	l%=l%+s :t=t-s :m=m-s*k :a=i :v=j :return
+
+{:calc340loop}
+	if s<.005 goto {:on moon}
+	d = v + sqr(v*v+2*a*(g-z*k/m)) :s=2*a/d
+	gosub {:calc420} :gosub {:calc330} :goto {:calc340loop}
+
+{:calc370}
+	w=(1-m*g/(z*k))/2 :s=m*v/(z*k*(w+sqr(w*w+v/z)))+0.5 :gosub {:calc420}
+	rem w=(1-m*g/(z*k))/2 :s=m*v/(z*k*(w+sqr(w*q+v/z)))+0.5 :gosub {:calc420}
+	if i<=0 goto {:calc340loop}
+	gosub {:calc330} :if j>0 goto {:after update}
+	if v>0 goto {:calc370}
+	goto {:after update}
+
+{:calc420}
+	q=s*k/m :j=v+g*s+z*(-q-q*q/2-q^3/3-q^4/4-q^5/5)
+	i=a-g*s*s/2 - v*s + z*z*(q/2 + q*q/6 + q^3/12 + q^4/20 + q^5/30)
+	return
+
+{:try again}
+	? "\x11\x11\x11try again??\x11" :goto {:brief instructions}
+

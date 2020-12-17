@@ -1,0 +1,4 @@
+cat lunar.list > lunar.tmp
+perl ../module-basic/basic-labelmaster.pl lunar.tmp > lunar.bas
+rm lunar.tmp
+echo "lunar.bas created"
