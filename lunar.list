@@ -61,7 +61,7 @@
 
 {:calc340loop}
 	if s<.005 goto {:on moon}
-	d = v + sqr(v*v+2*a*(g-z*k/m)) :s=2*a/d
+	d = v + sqr(v*v+2*a*abs(g-z*k/m)) :s=2*a/d
 	gosub {:calc420} :gosub {:calc330} :goto {:calc340loop}
 
 {:calc370}
