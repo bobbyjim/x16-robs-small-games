@@ -1,6 +1,6 @@
 
 	sc = 32 :rem screen indent
-	? chr$(147) "\x11"
+	color 5,0 : ? chr$(147) "\x11"
 	? tab(sc) "lunar"
 	? tab(sc/2) "\x11\x11creative computing   morristown, new jersey"
 	? "\x11\x11\x11\x11this is a computer simulation of an apollo lunar"
@@ -12,16 +12,29 @@
 	? "set burn rate of retro rockets to any value between"
 	? "0 (free fall) and 200 (maximum burn) pounds per second."
 	? "set new burn rate every 10 seconds."
-	? "\x11capsule weight 32,500 lbs; fuel weight 16,500 lbs."
+
+        m=33000 :n=16500
+
+	? "\x11please select the lander's technology:"
+	? "   1 - 1970 (harder)"
+	? "   2 - 1990 (default)"
+	? "   3 - 2010 (easier)"
+	input tl
+	if tl = 1 then m=32500 :n=16000
+	if tl = 2 then m=33000 :n=16500
+	if tl = 3 then m=30000 :n=10000
+	? "\x11capsule weight" m "lbs; fuel weight" m-n "lbs."
 	? "\x11\x11\x11good luck"
 
 	l%=0 :rem seconds elapsed
-	? "\x11 sec", " km", " kph", "lb fuel", "burn rate\x11"
+	? "\x11 sec", " km", " m/s", "lb fuel", "burn rate\x11"
 	
-	a=120 :v=1 :m=33000 :n=16500 :g=.001 :z=1.8
+	a=120 :v=1 :g=.001 :z=1.8
 
 {:show update}
-	? l%, int(1.6*a), int(1.6*3600*v),m-n,:input k :t=10
+        km$ = mid$(str$(1.6*a)+"     ",1,6)
+        ms  = int(100000*v)
+	? l%, km$, ms,m-n,:input k :t=10
 
 {:after update}
 	if m-n<.001 goto {:fuel gone}
