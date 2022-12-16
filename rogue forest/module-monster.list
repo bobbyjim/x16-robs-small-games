@@ -1,0 +1,66 @@
+; =======================================================================
+;
+;
+rem        move monster:nn address:aa relative_pos:xx,yy
+;
+;
+; =======================================================================
+{:monster-moves}
+vpoke 1,aa,so(nn)  :rem redraw tile
+dx=0 :dy=0
+if rnd(1)>0.5 goto {:move-monster-vertically}
+if xx<0 then aa=aa+2 :dx=1 :goto {:move-monster-set}
+if xx>0 then aa=aa-2 :dx=-1 :goto {:move-monster-set}
+{:move-monster-vertically}
+if yy<0 then aa=aa+$100 :dy=1 :goto {:move-monster-set}
+if yy>0 then aa=aa-$100 :dy=-1 :goto {:move-monster-set}
+{:move-monster-set}
+v=vpeek(1,aa)
+if v < $20 or v = $2a goto {:move-monster-done}
+so(nn)=vpeek(1,aa)
+ma(nn)=aa
+xm(nn)=xm(nn)+dx
+ym(nn)=ym(nn)+dy
+vpoke 1,aa,nn
+{:move-monster-done}
+return
+
+; =======================================================================
+;
+;
+rem                  monster nn attacks
+;
+;
+; =======================================================================
+{:monster-attacks}
+? vp$(51) spc(6) li$ : ? "\x91";
+w = int(rnd(1)*4)
+if int(rnd(1)*40) < \armor then w=0
+if w=0 then ? spc(6) "the " m$(nn) " misses."
+if w>0 then ? spc(6) "the " m$(nn) " hits you for" w "points." :gosub {:sound-shoot}
+\str = \str - w
+return
+
+; =======================================================================
+;
+;
+rem                  attack monster nn
+;
+;
+; =======================================================================
+{:monster-is-attacked}
+? vp$(52) spc(6) li$ : ? "\x91";
+t1 = \weapon and 7
+t2 = (\weapon/8) and 7
+t3 = (\weapon/64) and 7
+t4 = (\weapon/256) and 7
+t5 = t1+t2+t3+t4+1 - \hunger
+if t5 < 2 then t5 = 2
+w = int(rnd(1)*t5)
+hu=hu+1
+n=rnd(1) * nn
+? spc(6) "you hit the " m$(nn) " for" w "points"; :gosub {:sound-shoot}
+if w > n then ? ", killing it";: vpoke 1,ma(nn),$2e :ym(nn)=-1000 :\score=\score+w
+? "."
+return
+

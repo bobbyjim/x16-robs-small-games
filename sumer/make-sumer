@@ -1,0 +1,4 @@
+cat sumer.list module*list > sumer.tmp
+perl ../../module-basic/basic-labelmaster.pl sumer.tmp > sumer.bas
+rm sumer.tmp
+echo "sumer.bas created"

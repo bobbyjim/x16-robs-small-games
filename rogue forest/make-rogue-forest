@@ -1,0 +1,3 @@
+cat rogue-forest.list module*list > rogue-forest.tmp
+perl ../module-basic/basic-labelmaster.pl rogue-forest.tmp > rogue-forest.bas
+rm rogue-forest.tmp

@@ -1,0 +1,55 @@
+; =====================================================================
+;
+;
+rem                       splash screen!
+;
+;
+; =====================================================================
+{:splash-screen}
+? chr$(147)
+
+; left top    width   height  label
+; ---  -----  -----   ------  -----------
+l= 1  :t= 5  :w= 76  :h= 13  :l$= "Welcome"     :gosub {:panels.add}
+l= 1  :t= 19 :w= 76  :h= 15  :l$= "Map Key"     :gosub {:panels.add}
+l= 1  :t= 35 :w= 76  :h= 12  :l$= "Command Key" :gosub {:panels.add}
+
+gosub {:panels.drawframe} :rem draw panels
+
+? vp$(0); :gosub {:title.print} :rem title
+
+? vp$(8)
+? spc(6) "Find the Amulet of Yendor and exit the forest alive!"
+?
+? spc(6) "Points are awarded for items collected and monsters killed."
+
+? vp$(20)
+? spc(6) "@ ... you"
+? spc(6) chr$(fo(0)) " ... tree (impassable by you)"
+? spc(6) chr$(fo(1)) " ... clearing"
+? spc(6) chr$(fo(5)) " ... armor"
+? spc(6) chr$(fo(6)) " ... food"
+? spc(6) chr$(fo(7)) " ... weapon"
+? spc(6) chr$(fo(10))" ... amulet of yendor"
+?:?
+? spc(6) "-- Anything that moves is a monster --"
+
+? vp$(36)
+? spc(6) "? ............ help"
+? spc(6) "cursor keys .. move / attack"
+? spc(6) ". ............ rest"
+? spc(6) "e ............ eat food"
+? spc(6) "x ............ exit"
+?
+
+? vp$(50)
+? "   Good luck!"
+?
+
+gosub {:sound-explode}
+
+input "   please type your name"; \name$
+x=rnd(-ti)
+
+return
+

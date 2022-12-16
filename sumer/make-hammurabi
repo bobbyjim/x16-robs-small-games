@@ -1,4 +1,4 @@
 cat hammurabi.list module*list > hammurabi.tmp
-perl ../module-basic/basic-labelmaster.pl hammurabi.tmp > hammurabi.bas
+perl ../../module-basic/basic-labelmaster.pl hammurabi.tmp > hammurabi.bas
 rm hammurabi.tmp
 echo "hammurabi.bas created"

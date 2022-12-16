@@ -1,0 +1,52 @@
+* procedural random dungeon
+* retrieve the Amulet of Yendor, and perish with as much game points as possible
+* permadeath
+* turn-based (hjkl)
+	q quaff a potion
+	e eat some food
+
+* non-modal
+* Many Ways To Do Things
+* resource management is key to survival (food, water, potions)
+* hack-and-slash
+* Newly discovered objects only offer a vague physical description that is randomized between games, with purposes and capabilities left unstated. The identity of magical/enchanted items varies from run to run.  "Bubbly potion" might heal in one game and poison in another.
+   - Diablo-like randomization 
+   - Describe by color, and only later reveal its True Name via use/experimentation
+   - Wands
+   - Potions
+   - Rings
+   - Weapons
+   - Armor
+
+* Monsters can pick up items and use them.
+* PETSCII map
+* On-screen status of player and game.
+
+
+* Screen:
+You hear some noises in the distance.
+
+
+
+
+[map]
+
+
+
+
+
+Level n	   Hp  15(15)     Ac 9       Str 16       Exp 1
+
+
+* Key:
+@ - the player character
+. - empty floor space
++ - a door
+$ - gold
+% - food
+L - monster; a leprechaun
+[ - armor
+# - corridor
+< - stairway leading upwards
+
+

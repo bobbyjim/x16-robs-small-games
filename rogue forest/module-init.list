@@ -1,0 +1,52 @@
+;   ------------
+rem  initialize 
+;   ------------
+{:initialize}
+
+gosub {:vertical-position.init} :rem init vp$()
+
+l5$ = "\x91\x91\x91\x91\x91" :rem left 5
+
+c9$ = "         \x11\x9d\x9d\x9d\x9d\x9d\x9d\x9d\x9d\x9d"
+c9$ = c9$+c9$+c9$+c9$+c9$+c9$+c9$+c9$+c9$
+
+dim m$(31)
+for x=0 to 31 :read m$(x) :next
+data  Doppleganger,  Abalone,  Basilisk,    Centaur,    Dragon
+data  Ettin,         Fuzzy,    Ghoul,       Hellhound,  Imp
+data  Jinn,          Kobold,   Leprechaun,  Minotaur,   Nymph
+data  Orc,           Python,   Quagga,      Rattler,    Skeleton
+data  Troll,         Ur-vile,  Vampire,     Wraith,     Xeroc
+data  Yeti,          Zombie,   Wyvern,      Manticore,  Velociraptor
+data  Sphinx,        Spider
+
+for x=0 to 7 :read n$(x) :next
+data Cheney, Durin, Fargol, Khaalo, Rejnaldi, Sara, Sharik, Zog
+
+for x=0 to 7 :read c$(x) :next
+data "","red ","green ","blue ","tin ","white ","pale ","gold "
+
+for x=0 to 7 :read d$(x) :next
+data ""," of war"," of agility"," of pain"," of cunning"
+data " of skill",""," of magic"
+
+for x=0 to 7 :read w$(x) :next
+data dagger, staff, hammer, machete, axe, sword, labrys, halberd
+
+for x=0 to 7 :read a$(x) :next
+data leather, hauberk, ringmail, mesh, mail, splint, plate, mithril
+
+rem forest elements
+fo(0) = $41 :rem tree
+fo(1) = $2e :rem dot
+fo(2) = $2e :rem dot
+fo(3) = $43 :rem horiz line
+fo(4) = $42 :rem vert line
+fo(5) = $23 :rem armor (#)
+fo(6) = $24 :rem food ($)
+fo(7) = $27 :rem weapon (')
+fo(8) = $27
+fo(9) = $24
+fo(10) = $2a :rem amulet of yendor
+
+return

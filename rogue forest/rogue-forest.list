@@ -1,0 +1,150 @@
+rem
+rem "ÕÃÃÕÀÉÕÀÉÂ ÂÕÀÀ  ÕÃÃÕÀÉÕÃÃÕÀÀÕÀÃÀ²À "
+rem "Â  ÊÀËÊÀÛÊÀË«À   «À ÊÀËÂ  «À ÊÀÉ Â  "
+rem "       ÀË   ÊÀÀ  Â        ÊÀÀÃÀË    "
+rem
+;   -------------------
+rem  initialize player
+;   -------------------
+longvar \name      r0
+longvar \playerx   r1
+longvar \playery   r2
+longvar \score     r3
+longvar \hunger    r4
+longvar \food      r5
+longvar \weapon    r6
+longvar \armor     r7
+longvar \yendor    r8
+
+longvar \upp	   c0
+longvar \str       c1
+longvar \maxst     c2
+longvar \dex	   c3
+longvar \end       c4
+longvar \int       c5
+
+longvar \tempmessage t0
+
+gosub {:initialize}  :rem init game
+gosub {:sound-init}  :rem init sound
+gosub {:panels.init} :rem init panels
+
+;   --------------
+rem  line-cleaner
+;   --------------
+li$ = "                                                           "
+
+gosub {:splash-screen} :rem splash screen
+gosub {:forest-build}  :rem build forest
+
+\playerx=int(rnd(1)*50+10)
+\playery=int(rnd(1)*30+10)
+\score  = 0
+\hunger = 0
+\food   = 1
+\weapon = 1
+\armor  = 0
+\weapon$ = "Rusty Spork"
+\armor$ = "Tuxedo"
+\str    = int(rnd(1)*6)+int(rnd(1)*6)+2 :rem str
+\maxst  = \str
+\dex    = int(rnd(1)*6)+int(rnd(1)*6)+2 :rem dex
+\end    = int(rnd(1)*6)+int(rnd(1)*6)+2 :rem end
+\int    = int(rnd(1)*6)+int(rnd(1)*6)+2 :rem int
+\upp(1) = \str
+\upp(2) = \dex
+\upp(3) = \end
+\upp(4) = \int
+\yendor$ = "not yet"
+
+dim iw%(10), ia%(10) :rem weapons, armor
+; =====================================================================
+;
+;
+rem                       draw the screen
+;
+;
+; =====================================================================
+rem hide background
+color 1,6 :cls :rem white on blue
+gosub {:title.print} :rem title
+gosub {:panels.delete} 
+; left top    width   height  label
+; ---  -----  -----   ------  -----------
+l= 1  :t= 44 :w= 76  :h= 15  :l$= "" :gosub {:panels.add}
+gosub {:panels.drawframe} :rem draw panels
+gosub {:inventory}
+
+;   ----------------------------------
+rem  print player and position cursor
+;   ----------------------------------
+{:draw}
+? vp$(\playery-4);
+color 1,0 :rem transparent (clears fog)
+? tab(\playerx-4) c9$;
+color 1,6 :rem blue under white
+? l5$ tab(\playerx) "@"
+? vp$(4) li$ : ? "\x91   STR" \str "score:" \score "hunger:" \hunger
+
+if rnd(1)>0.95 then \hunger = \hunger + 1
+
+\tempmessage = \tempmessage - 1
+if \tempmessage = 0 then ? vp$(5) li$
+
+{:inkey} get a$ :if a$="" goto {:inkey}
+xx=0 :yy=0
+if a$="\x11" then yy=+1 :rem down
+if a$="\x91" then yy=-1 :rem up
+if a$="\x1d" then xx=+1 :rem right
+if a$="\x9d" then xx=-1 :rem left
+if a$="e" then gosub {:eat-food}
+if (a$="." or a$=" ") and \str < \maxst then \str = \str + 1
+
+lo = vpeek(1,(\playery+yy)*$100 + (\playerx+xx)*2)
+
+if lo < $20 then nn=lo :gosub {:monster-is-attacked} :goto {:do-a-monster-check}
+if lo > $22 and lo < $2e then :gosub {:treasure} :gosub {:inventory}
+if lo < $41 then \playerx=\playerx+xx :\playery=\playery+yy :hu=hu+1: lo = vpeek(1,\playery*$100 + \playerx*2)
+
+{:do-a-monster-check}
+for nn=0 to 31
+   aa=ma(nn)
+   xx=xm(nn)-\playerx
+   yy=ym(nn)-\playery
+;
+;  Tom complained that monsters gain an unfair advantage in attacking
+;  diagonally, so I'll disable that (for now)
+;
+   if abs(xx)+abs(yy) <= 1 then gosub {:monster-attacks} :goto {:skip-move-monster}
+   if rnd(1)>0.5 then {:skip-move-monster}
+   if abs(xx) < 9 and abs(yy) < 9 then gosub {:monster-moves}
+{:skip-move-monster}
+next
+
+if \str < 1 goto {:finalize}
+if (\playerx<70) and (\playerx>7) and (\playery<42) and (\playery>5) goto {:draw}
+
+{:finalize}
+gosub {:game-over}
+end
+
+{:inventory}
+? vp$(46);
+? spc(6) li$: ? "\x91" spc(6) "weapon: " \weapon$ " (" \weapon ")"
+? spc(6) li$: ? "\x91" spc(6) "armor : " \armor$ " (" \armor ")"
+? spc(6) li$: ? "\x91" spc(6) "food  : " \food
+? spc(6) li$: ? "\x91" spc(6) "amulet: " \yendor$ 
+? spc(6) li$: ? "\x91" spc(6) "score : " \score
+?
+return
+
+{:eat-food}
+if \food < 1 then return
+if \hunger < 1 then return
+\food = \food - 1
+\hunger = \hunger - 1
+\tempmessage = 5
+? vp$(5) li$ :?"\x91   you feel better."
+gosub {:inventory}
+return
+

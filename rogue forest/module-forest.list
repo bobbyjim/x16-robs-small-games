@@ -1,0 +1,130 @@
+; =====================================================================
+;
+;
+rem                         build the forest
+;
+;
+; =====================================================================
+{:forest-build}
+
+;   ------------------------
+rem  set up video registers
+;   ------------------------
+poke $9f2d, %01100000 :rem map height=1, width=2 = 64x128 tiles
+poke $9f2e, %10000000 :rem map base addr = 128 x512 = $10000.
+poke $9f2f, %11111000 :rem tile base addr = $1f000.
+rem also, tile ht=0, wd=0, so 8 pixels x 8 pixels
+
+;   -----------------------------------
+rem  no scrolling, please ($9f30-$9f33)
+;   -----------------------------------
+poke $9f30, 0
+poke $9f31, 0
+poke $9f32, 0
+poke $9f33, 0
+
+color 1,0 :cls  :rem 0=transparent
+
+poke $9f29, %00110001 :rem $31=layers 1,0. Output mode=1 (VGA)
+
+; print "\x13\x11\x11\x11\x11color 1,6\x13"
+; if vpeek(1,0)=fo(0) goto {:hide-bkgd}
+; else
+cc=4:cd=45
+if vpeek(1,0) = 32 then cc=8 :cd=40
+
+;   ----------------------------------------------------------
+rem  unrolling this loop shaves 5 secs
+;   ----------------------------------------------------------
+cl=$05  :rem bg/fg color nybbles ($15=white under green)
+rem monster data
+mn=0
+dim ma(31)
+dim xm(31),ym(31)
+dim so(31) :rem terrain the monster is .s.tanding .o.n
+
+POKE $9F25, PEEK($9F25) AND 254 : REM SELECT PORT 0
+POKE $9F22, %00010001 : REM INCR 1 AND VRAM ADDR BIT 16
+
+for Y=cc to cd
+   Y0=y*$100
+   for X=0 to 158 step 8
+      p=y0+x
+
+      POKE $9f21, INT(P/256) AND 255 :REM VRAM 15:8
+      POKE $9f20, P AND 255          :REM VRAM 7:0
+
+      if y<8 or y>40 goto {:draw-nothingness}
+      if x<14 or x>140 goto {:draw-nothingness}
+;     else
+         ff=3
+
+         if y>8 and y<40 then ff=int(rnd(1)*3)
+         poke $9f23, fo(ff) :rem character index
+         poke $9f23, cl   :rem bg/fg color nybbles
+
+         if y>8 and y<40 then ff=int(rnd(1)*3)
+         poke $9f23, fo(ff)
+         poke $9f23, cl
+
+         if y>8 and y<40 then ff=int(rnd(1)*3)
+         poke $9f23, fo(ff)
+         poke $9f23, cl
+
+         if y>8 and y<40 then ff=int(rnd(1)*3)
+         poke $9f23, fo(ff)
+         poke $9f23, cl
+
+         if y<9 or y>39 goto {:draw-done}
+
+         rem treasure
+         if rnd(1) > 0.08 goto {:draw-done}
+            xx = int(rnd(4))
+            vpoke 1,p+2*xx,fo(5+int(rnd(1)*4))
+            POKE $9F25, PEEK($9F25) AND 254 : REM RE-SELECT PORT 0
+            POKE $9F22, %00010001 : REM INCR 1 AND VRAM ADDR BIT 16
+            goto {:draw-done}
+
+{:draw-nothingness}
+
+            poke $9f23, $20
+            poke $9f23, cl
+            poke $9f23, $20
+            poke $9f23, cl
+            poke $9f23, $20
+            poke $9f23, cl
+            poke $9f23, $20
+            poke $9f23, cl
+;     fi
+{:draw-done}
+   next
+{:skip}
+next
+
+
+;   ----------------
+rem  place monsters
+;   ----------------
+for m = 1 to 26 :rem 0 to 31
+{:place-monster}
+   x = 10 + int(rnd(1)*60)
+   y = 10 + int(rnd(1)*30)
+   
+   xx = abs(x-\playerx)
+   yy = abs(y-\playery)
+
+   if xx<6 and yy<6 goto {:place-monster} :rem too close!
+
+   ma = y * $100 + x * 2
+   ma(m) = ma
+   xm(m)=x
+   ym(m)=y
+   so(m) = vpeek(1,ma)
+   vpoke 1,ma,m
+next
+
+
+rem amulet of yendor
+vpoke 1, int(rnd(1)*30+10) * $100 + int(rnd(1)*60+10) * 2, fo(10)
+
+return

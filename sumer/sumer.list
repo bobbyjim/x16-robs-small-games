@@ -1,0 +1,379 @@
+rem -----------------------------------------------------
+rem
+rem   sumer - a hmrabi / sumer game from scratch
+rem   rje 2021 (adapted from my 1983-ish version)
+rem
+rem -----------------------------------------------------
+dim dn$(59),cl$(59)
+cl$(0)=chr$(147) :rem cls
+dn$(0)=chr$(19)  :rem home
+for x = 1 to 59
+   dn$(x)=dn$(x-1)+"\x11"
+   cl$(x)=cl$(x-1)+"\x11"
+next
+sp$ = "     " : s2$ = "               "
+hr$=chr$(192)
+for x = 1 to 79:hr$=hr$+chr$(192) :next
+el$="                                                                     "
+
+as$="accursed sea peoples"
+
+rem emulate amber PETlike terminal
+color 8,0  
+VLOAD "PETFONT.BIN",8,1,0 
+POKE $9F36,128
+
+rem --------------------------------------------------
+rem  title screen
+rem --------------------------------------------------
+{:splash screen}
+? cl$(16) spc(30) "        sumer" 
+? hr$ spc(30) "  rje 1983 (updated)"
+? "\x11\x11\x11\x11\x11"
+? sp$ "run the ancient city-state of sumer for twelve years.  use your\x11"
+? sp$ "wisdom to grow a strong population.  prepare against disaster, and\x11"
+? sp$ "be recorded as a worthy ruler.\x11\x11\x11\x11\x11"
+input "     do you want instructions"; yn$
+if yn$<>"y" and yn$<>"n" goto {:splash screen}
+if yn$="y" then gosub {:instructions}
+
+rem --------------------------------------------------
+rem  initialize data
+rem --------------------------------------------------
+{:initialize}
+x=rnd(-ti)
+
+longvar \year
+longvar \plague
+longvar \famine
+longvar \war
+longvar \attack
+
+longvar \acres.total
+longvar \acres.planted
+longvar \acres.price
+
+longvar \population
+longvar \health
+longvar \loyalty
+longvar \births
+longvar \starved.total
+longvar \starved.percent
+longvar \immigration
+longvar \granaries
+longvar \grain.harvest
+longvar \grain.store
+longvar \grain.eaten
+longvar \grain.spoiled
+
+\plague = 0 :rem plague
+\famine = 0 :rem famine
+\war = 0 :rem at war
+\attack = 0 :rem attack/ed
+
+\population = 100 :rem pop
+\health = 1.0 :rem health
+\loyalty = 1.0 :rem loyalty
+\births = 0 :rem births
+\immigration = 0 :rem immigrants
+
+\acres.total = 1000 :rem acres.total
+\acres.planted = 1000 :rem acres.planted
+\acres.price = 20 :rem acres.price
+
+\grain.store = 3000 :rem grain.store
+\grain.harvest = 3 :rem grain.harvest
+\grain.eaten = 0 :rem grain.eaten
+\grain.spoiled = 0 :rem grain.spoilt
+
+rem --------------------------------------------------
+rem  main loop
+rem --------------------------------------------------
+for \year = 3502 to 3501 step -1
+\loyalty = \loyalty * 0.95 :rem loyalty slowly diminishes
+
+gosub {:start report} :rem start report
+gosub {:check population} :rem check population
+gosub {:check plague} :rem check plague
+gosub {:check famine} :rem check famine
+gosub {:check war} : rem check war
+gosub {:complete report} :rem complete report
+
+? dn$(49) hr$;
+gosub {:buy and sell land} :rem buy/sell land
+gosub {:feed your people} :rem feed people
+gosub {:plant fields} :rem plant fields
+
+if \year<3512 then gosub {:wage war} :rem wage war
+?: input "   press <return>"; yn$
+gosub {:events} :rem handle all events
+
+next \year :rem next year
+
+rem --------------------------------------------------
+rem  end game
+rem --------------------------------------------------
+? cl$(10) spc(30) "      end of term"
+? hr$ "\x11"
+
+p1 = int(\starved.percent * 100)
+l  = int(0.5 + \acres.total / \population)
+
+? sp$ "o great hammurabi, the year is"\year"BC\x11"
+? sp$ "in your 12-year term of office," p1 "% of the"
+? sp$ "people starved each year on average; that is," \starved.total "people starved!"
+?
+? sp$ "you started with 10 acres per person and ended with"
+? sp$ l "acres per person."
+
+if p1>33 or l<7  goto {:impeached}
+if p1>10 or l<9  goto {:hatred}
+if p1>3  or l<10 goto {:meh}
+
+? sp$ "you were recorded as a wise and just ruler!" :end
+
+{:impeached}
+? sp$ "you were recorded as the incompetent national fink!" :end
+
+{:hatred}
+? sp$ "you were recorded as heavy-handed and unpopular." :end 
+
+{:meh}
+? sp$ "you were recorded as a so-so ruler." :end
+
+rem --------------------------------------------------
+rem  instructions
+rem --------------------------------------------------
+{:instructions}
+? cl$(10)
+{:instruction loop}
+read a$
+? sp$ a$ "\x11"
+if a$ <> "" goto {:instruction loop}
+
+data "the year is 3500 BC.  you are the ruler of the ancient state of"
+data "sumer. you have twelve years to run your empire."
+data "\x11"
+data "feed each person 20 bushels of grain per year; less will decrease"
+data "health and loyalty, while more will increase both. a healthy "
+data "population is stronger and grows faster."
+data "\x11"
+data "each person can plant two acres of farmland with one bushel of grain."
+data "each acre yields between 2 and 7 bushels of grain. famine reduces"
+data "the yield per acre, and rats eat surplus stored grain."
+data "\x11"
+data "the price of land averages 20 bushels per acre."
+data "\x11"
+data "war and plague will kill people and lower loyalty.
+data "winning a war will increase loyalty.  do not start a war if the "
+data "population is in poor health."
+data ""
+
+?:input "     press <return> to begin"; yn$
+return
+
+rem --------------------------------------------------
+rem  start the report
+rem --------------------------------------------------
+{:start report}
+? cl$(4);
+? sp$ "o hammurabi, i am sorry to report, ";
+? "in year" (3513 - \year);
+? "(" \year "BC )"
+? hr$ "\x11"
+return
+
+rem --------------------------------------------------
+rem check population
+rem --------------------------------------------------
+{:check population}
+if \births > 0 then ? s2$ "** " \births "new citizens were born\x11"
+if \births < 0 then ? s2$ "** " abs(\births) "people starved to death!\x11"
+if \births < 0 then \starved.total = \starved.total - \births
+
+x = 3513 - \year
+if \births < 0 then \starved.percent = \starved.percent + (\births / \population)/12
+
+if \immigration > 0 then ? s2$ "** " \immigration "people moved to sumer\x11"
+if \immigration < 0 then ? s2$ "** " \immigration "people left sumer\x11"
+return
+
+rem --------------------------------------------------
+rem check plague
+rem --------------------------------------------------
+{:check plague}
+if \plague = 0 then ? s2$ "the streets are clean\x11" :return
+? s2$ "a plague struck your city!\x11"
+? s2$ "** " \plague "people died\x11"
+return :rem plague done
+
+rem --------------------------------------------------
+rem check famine
+rem --------------------------------------------------
+{:check famine}
+if \famine = 0 then ? s2$ "the land is now healthy\x11" :return
+? s2$ "there is famine in the land!\x11" :return 
+return :rem famine done
+
+rem --------------------------------------------------
+rem check war
+rem --------------------------------------------------
+{:check war}
+if \attack > 0 then ? s2$ "sumer attacks the "as$"!\x11":return
+if \attack < 0 then ? s2$ "sumer was attacked!\x11" :return
+if \war>0 then?s2$"you are at war with the "as$"!\x11" :return
+? s2$ "sumer is at peace.\x11" :return
+
+rem --------------------------------------------------
+rem  complete the report
+rem --------------------------------------------------
+{:complete report}
+? 
+? s2$ "sumer has" \population "people;\x11"
+? s2$ "it has"\acres.total"acres of farmland;"\acres.planted"were planted.\x11"
+
+rem rats?
+if \grain.eaten>0 then ? s2$ "rats ate"\grain.eaten"bushels of stored grain.\x11"
+
+rem spoilage?
+if \grain.spoiled>0 then ? s2$ "\x9d" \grain.spoiled"bushels of stored grain spoiled.\x11"
+
+? s2$ "the harvest was" \grain.harvest "bushels per acre,\x11"
+t = \grain.harvest * \acres.planted
+? spc(25) "for a total of" t "bushels.\x11"
+
+? s2$ "\x11the royal granaries now hold" \grain.store "bushels of grain.\x11"
+return :rem complete report
+
+rem --------------------------------------------------
+rem  buy and sell land
+rem --------------------------------------------------
+{:buy and sell land}
+ll = int(rnd(1)*10+16)
+if \grain.store < ll goto {:sell acres}
+{:buy acres}
+? dn$(48);el$;dn$(48);
+?"  land is"ll"bushels per acre. you have"\acres.total"acres and"\grain.store "bushels."
+? dn$(50);el$;dn$(50);
+input "  how many acres will you buy";ab$
+ab=val(ab$) :if ab*ll>\grain.store then {:buy acres}
+\grain.store = \grain.store - ab*ll
+\acres.total = \acres.total + ab
+
+{:sell acres}
+? dn$(48);el$;dn$(48);
+?"  land is"ll"bushels per acre. you have"\acres.total"acres and"\grain.store "bushels."
+? dn$(50);el$;dn$(50);
+input "  how many acres will you sell";ab$
+ab=val(ab$) :if ab>\acres.total then {:sell acres}
+\grain.store = \grain.store + ab*ll
+\acres.total = \acres.total - ab
+
+return :rem buy and sell land
+
+rem --------------------------------------------------
+rem  feed your people
+rem --------------------------------------------------
+{:feed your people}
+? dn$(48);el$;dn$(48);
+? "  you have"\acres.total"acres and"\grain.store "bushels."
+? dn$(50); el$ ; dn$(50); 
+input "  how many bushels will you use to feed your people"; bu$
+bu = val(bu$) :if bu>\grain.store goto {:feed your people}
+
+\grain.store = \grain.store - bu
+bu = (bu / \population) - 20
+\loyalty = \loyalty + bu/50
+\health = \health + bu/100
+
+? dn$(59) "loyalty:" \loyalty ", health:" \health ", bu/pop:" bu / \population;
+return
+
+rem --------------------------------------------------
+rem  plant
+rem --------------------------------------------------
+{:plant fields}
+? dn$(48);el$;dn$(48);
+? "  you have"\acres.total"acres and"\grain.store "bushels."
+? dn$(50);el$;dn$(50);
+input "  how many acres will you plant"; pa$
+pa = val(pa$)
+if pa>\grain.store * 2 then ?:? "  you lack the grain" :goto {:plant fields}
+if pa>\acres.total then ?:? "  you lack the land" :goto {:plant fields}
+if pa>\population * 10 then ?:? "  you don't have enough people" :goto {:plant fields}
+
+? dn$(52);el$
+
+\grain.store = \grain.store - int(pa/2)
+\acres.planted = pa 
+
+return :rem plant
+
+
+rem --------------------------------------------------
+rem wage war on the accursed sea peoples
+rem --------------------------------------------------
+{:wage war}
+if \war > 0 then return
+? dn$(50); el$ ; dn$(50);
+input "  do you wish to wage war against the accursed sea peoples"; yn$
+\attack = 0
+yn=val(yn$) :if yn$="y" then \attack = 1
+return
+
+rem --------------------------------------------------
+rem handle all events
+rem --------------------------------------------------
+{:events}
+rem
+rem grain eaten = rat population
+rem rat population will grow if you keep
+rem a large surplus over multiple years
+rem
+\grain.eaten = \grain.eaten + int(rnd(1)*\grain.store /100)*10
+if \grain.eaten > \grain.store  then \grain.eaten = \grain.store 
+\grain.store = \grain.store - \grain.eaten
+
+rem
+rem grain rot is not cumulative, i guess
+rem
+\grain.spoiled = int(rnd(1)*\grain.store /30)*10
+if \grain.spoiled > \grain.store then \grain.spoiled = \grain.store
+\grain.store = \grain.store - \grain.spoiled
+
+rem
+rem grain harvest
+rem
+\grain.harvest = int(rnd(1)*4+4) - \famine :rem 3 to 7 bu/acre normally
+if \grain.harvest < 2 then \grain.harvest = 2
+\grain.store = \grain.store + \grain.harvest * \acres.planted
+
+rem births
+\births = int( (\health-0.5) * \population * rnd(1)/8 )
+\population = \population + \births
+
+rem immigration
+\immigration = int( (\loyalty-0.5) * \population * rnd(1)/5 )
+\population = \population + \immigration
+
+rem start/end plague
+\plague = 0
+if rnd(1)>0.7 then \plague = int(\population * rnd(1) * 0.5) 
+if \plague>0 then \health = \health * 0.9 :rem erode health
+\population = \population - \plague
+
+rem start/end famine
+if rnd(1)>0.7 then \famine = int(rnd(1)*4+1) 
+if rnd(1)<0.2 then \famine = 0
+
+rem wage war
+if \war = 0 goto {:no war}
+;\loyalty = \loyalty * 0.95 :rem loyalty decreases during war
+;\population = \population - int(rnd(1)*\population/20)
+;if rnd(1)>0.5 then \war = 0 
+
+;rem if sumer appears weak, then the sea peoples attack
+
+{:no war}
+
+return

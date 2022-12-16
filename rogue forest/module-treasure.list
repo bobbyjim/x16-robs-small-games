@@ -1,0 +1,93 @@
+; =======================================================================
+;
+;
+rem                   treasure finds (type in 'lo')
+;
+;
+; =======================================================================
+{:treasure}
+color 1,6
+rem clear the square the player is *looking at*
+vpoke 1,(\playery+yy)*$100 + (\playerx+xx)*2, $2e
+
+gosub {:sound-ping}
+
+;  ----------------------
+rem pre-calc some values
+;  ----------------------
+t1=int(rnd(1)*8)
+t2=int(rnd(1)*8)
+t3=int(rnd(1)*8)
+t4=int(rnd(1)*8)
+
+;  ------------------------
+rem figure out what we got
+;  ------------------------
+if lo=fo(10) goto {:treasure-yendor}
+if lo=fo(5)  goto {:treasure-armor}
+if lo=fo(6)  goto {:treasure-food}
+if lo=fo(7)  goto {:treasure-weapon}
+; else
+return
+
+{:treasure-yendor}
+? vp$(5) li$ :? "\x91   you found the amulet of yendor! "
+\yendor$ = "found it!"
+\yendor=1  :rem player-yendor
+\tempmessage = 5
+return
+
+{:treasure-food}
+t1 = int(rnd(1)*8+1)
+? vp$(5) li$ :?"\x91   you found" t1 "food."
+\food=\food + t1
+\tempmessage = 5
+return
+
+{:treasure-armor}
+\score = \score + t1+t2+t3+t4
+ad$ = n$(t1) + "'s " + c$(t2) + a$(t3) + d$(t4)
+gosub {:treasure-util-position-line}
+? spc(6) "you found " ad$
+?:? spc(6) "replace your current armor with it? [yn] "; 
+
+{:armor-get} get yn$ :if yn$<> "y" and yn$ <> "n" goto {:armor-get}
+
+gosub {:treasure-util-erase-lines}
+if yn$ = "n" then return
+\armor = t1 + t2 +t3 + t4 
+; \armor = t1 + t2 * 8 + t3 * 64 + t4 * 256
+\armor$ = ad$
+return
+
+{:treasure-weapon}
+\score = \score + t1+t2+t3+t4
+wd$ = n$(t1) + "'s " + c$(t2) + w$(t3) + d$(t4)
+gosub {:treasure-util-position-line}
+? spc(6) "you found " wd$
+?:? spc(6) "replace your current weapon with it? [yn] "; 
+
+{:weapon-get} get yn$ :if yn$<> "y" and yn$ <> "n" goto {:weapon-get}
+
+gosub {:treasure-util-erase-lines}
+if yn$ = "n" then return
+\weapon = t1 + t2 * 8 + t3 * 64 + t4 * 256
+\weapon$ = wd$
+return
+
+{:treasure-util-position-line}
+? vp$(51);
+?spc(6) li$
+?spc(6) li$
+?spc(6) li$
+?"\x91\x91\x91";
+return
+
+{:treasure-util-erase-lines}
+? "\x91\x91\x91\x91"
+?spc(6) li$ 
+?spc(6) li$ 
+?spc(6) li$ 
+?spc(6) li$
+return
+
