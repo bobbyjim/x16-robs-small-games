@@ -89,15 +89,15 @@ longvar \grain.spoiled
 rem --------------------------------------------------
 rem  main loop
 rem --------------------------------------------------
-for \year = 3502 to 3501 step -1
+for \year = 3510 to 3501 step -1
 \loyalty = \loyalty * 0.95 :rem loyalty slowly diminishes
 
-gosub {:start report} :rem start report
+gosub {:start report}     :rem start report
 gosub {:check population} :rem check population
-gosub {:check plague} :rem check plague
-gosub {:check famine} :rem check famine
-gosub {:check war} : rem check war
-gosub {:complete report} :rem complete report
+gosub {:check plague}     :rem check plague
+gosub {:check famine}     :rem check famine
+gosub {:check war}        :rem check war
+gosub {:complete report}  :rem complete report
 
 ? dn$(49) hr$;
 gosub {:buy and sell land} :rem buy/sell land
@@ -152,7 +152,7 @@ read a$
 if a$ <> "" goto {:instruction loop}
 
 data "the year is 3500 BC.  you are the ruler of the ancient state of"
-data "sumer. you have twelve years to run your empire."
+data "sumer. you have ten years to run your empire."
 data "\x11"
 data "feed each person 20 bushels of grain per year; less will decrease"
 data "health and loyalty, while more will increase both. a healthy "
@@ -165,7 +165,7 @@ data "\x11"
 data "the price of land averages 20 bushels per acre."
 data "\x11"
 data "war and plague will kill people and lower loyalty.
-data "winning a war will increase loyalty.  do not start a war if the "
+data "winning a battle will increase loyalty.  do not start a fight if the "
 data "population is in poor health."
 data ""
 
@@ -177,7 +177,7 @@ rem  start the report
 rem --------------------------------------------------
 {:start report}
 ? cl$(4);
-? sp$ "o hammurabi, i am sorry to report, ";
+? sp$ "o king of shuruppak, i am sorry to report, ";
 ? "in year" (3513 - \year);
 ? "(" \year "BC )"
 ? hr$ "\x11"
@@ -309,7 +309,6 @@ if pa>\population * 10 then ?:? "  you don't have enough people" :goto {:plant f
 
 return :rem plant
 
-
 rem --------------------------------------------------
 rem wage war on the accursed sea peoples
 rem --------------------------------------------------
@@ -348,32 +347,46 @@ rem
 if \grain.harvest < 2 then \grain.harvest = 2
 \grain.store = \grain.store + \grain.harvest * \acres.planted
 
+rem
 rem births
+rem
 \births = int( (\health-0.5) * \population * rnd(1)/8 )
 \population = \population + \births
 
+rem
 rem immigration
+rem
 \immigration = int( (\loyalty-0.5) * \population * rnd(1)/5 )
 \population = \population + \immigration
 
+rem
 rem start/end plague
+rem
 \plague = 0
 if rnd(1)>0.7 then \plague = int(\population * rnd(1) * 0.5) 
 if \plague>0 then \health = \health * 0.9 :rem erode health
 \population = \population - \plague
 
+rem
 rem start/end famine
+rem
 if rnd(1)>0.7 then \famine = int(rnd(1)*4+1) 
 if rnd(1)<0.2 then \famine = 0
 
+rem
 rem wage war
+rem
 if \war = 0 goto {:no war}
-;\loyalty = \loyalty * 0.95 :rem loyalty decreases during war
-;\population = \population - int(rnd(1)*\population/20)
-;if rnd(1)>0.5 then \war = 0 
+\loyalty = \loyalty * 0.95 :rem loyalty decreases during war
+\population = \population - int(rnd(1)*\population/20)
+if rnd(1)>0.5 then \war = 0 
 
-;rem if sumer appears weak, then the sea peoples attack
+rem
+rem if sumer appears weak, then the sea peoples attack
+rem
+if rnd(1) > 0.5 goto {:no war}
+if \famine == 0 and \plague == 0 then return
+\attack = -1
 
 {:no war}
-
 return
