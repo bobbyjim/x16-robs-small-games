@@ -377,7 +377,7 @@ rem
 rem wage war
 rem
 if \war = 0 goto {:no war}
-\loyalty = \loyalty * 0.95 :rem loyalty decreases during war
+\loyalty = \loyalty * 1.05 :rem loyalty increases during war
 \population = \population - int(rnd(1)*\population/20)
 if rnd(1)>0.5 then \war = 0 
 
@@ -386,6 +386,7 @@ rem if sumer appears weak, then the sea peoples attack
 rem
 if rnd(1) > 0.5 goto {:no war}
 if \famine == 0 and \plague == 0 then return
+\loyalty = \loyalty * 0.95 :rem loyalty decreases due to incursion
 \attack = -1
 
 {:no war}
