@@ -1,13 +1,13 @@
-; =======================================================================
-;
-;
-rem                      game over - print score
-;
-;
-; =======================================================================
+rem ===================================
+rem
+rem
+rem     game over - print score
+rem
+rem
+rem ===================================
 {:game-over}
 COLOR 1,$06 :rem white on blue
-? chr$(147) :rem clr
+cls
 
 gosub {:panels.delete}
 
@@ -17,21 +17,23 @@ l= 1  :t= 1  :w= 76  :h= 17  :l$= "Game Over"   :gosub {:panels.add}
 
 gosub {:panels.drawframe}
 
-? vp$(3)
-?spc(6) "Your accomplishments"
-?:?:? spc(6) "escaped the forest: ";
+locate 3,6
+? "Your accomplishments"
+locate 6,6
+? "escaped the forest: ";
 if \str < 1 then ? "no"
 if \str > 0 then ? "yes"
-
-?:? spc(6) "found the amulet:   ";
+locate 9,6
+? "found the amulet:   ";
 if \yendor = 0 then ? "no"
 if \yendor = 1 then ? "yes"
-
-?:?:? spc(6) "score:             " \score
+locate 12,6
+? "score:             " \score
 
 gosub {:sound-explode}
 
-?:?:? spc(6) "thank you for playing rogue forest!"
-?:?:?
+locate 15,6
+? "thank you for playing rogue forest!"
+locate 18
 
 return

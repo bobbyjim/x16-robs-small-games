@@ -1,12 +1,11 @@
-; =====================================================================
-;
-;
-rem                       splash screen!
-;
-;
-; =====================================================================
+rem =================================================================
+rem
+rem
+rem                       "splash" screen
+rem
+rem
+rem =================================================================
 {:splash-screen}
-? chr$(147)
 
 ; left top    width   height  label
 ; ---  -----  -----   ------  -----------
@@ -16,14 +15,12 @@ l= 1  :t= 35 :w= 76  :h= 12  :l$= "Command Key" :gosub {:panels.add}
 
 gosub {:panels.drawframe} :rem draw panels
 
-? vp$(0); :gosub {:title.print} :rem title
-
-? vp$(8)
+locate 8
 ? spc(6) "Find the Amulet of Yendor and exit the forest alive!"
 ?
 ? spc(6) "Points are awarded for items collected and monsters killed."
 
-? vp$(20)
+locate 21
 ? spc(6) "@ ... you"
 ? spc(6) chr$(fo(0)) " ... tree (impassable by you)"
 ? spc(6) chr$(fo(1)) " ... clearing"
@@ -34,7 +31,7 @@ gosub {:panels.drawframe} :rem draw panels
 ?:?
 ? spc(6) "-- Anything that moves is a monster --"
 
-? vp$(36)
+locate 37
 ? spc(6) "? ............ help"
 ? spc(6) "cursor keys .. move / attack"
 ? spc(6) ". ............ rest"
@@ -42,7 +39,7 @@ gosub {:panels.drawframe} :rem draw panels
 ? spc(6) "x ............ exit"
 ?
 
-? vp$(50)
+locate 50
 ? "   Good luck!"
 ?
 

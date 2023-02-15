@@ -1,10 +1,10 @@
-; =======================================================================
-;
-;
+rem =================================================================
+rem
+rem
 rem                   treasure finds (type in 'lo')
-;
-;
-; =======================================================================
+rem
+rem
+rem =================================================================
 {:treasure}
 color 1,6
 rem clear the square the player is *looking at*
@@ -12,17 +12,17 @@ vpoke 1,(\playery+yy)*$100 + (\playerx+xx)*2, $2e
 
 gosub {:sound-ping}
 
-;  ----------------------
-rem pre-calc some values
-;  ----------------------
+rem  ----------------------
+rem  pre-calc some values
+rem  ----------------------
 t1=int(rnd(1)*8)
 t2=int(rnd(1)*8)
 t3=int(rnd(1)*8)
 t4=int(rnd(1)*8)
 
-;  ------------------------
-rem figure out what we got
-;  ------------------------
+rem  ------------------------
+rem  figure out what we got
+rem  ------------------------
 if lo=fo(10) goto {:treasure-yendor}
 if lo=fo(5)  goto {:treasure-armor}
 if lo=fo(6)  goto {:treasure-food}
@@ -31,7 +31,8 @@ if lo=fo(7)  goto {:treasure-weapon}
 return
 
 {:treasure-yendor}
-? vp$(5) li$ :? "\x91   you found the amulet of yendor! "
+locate 5
+? li$ :? "\x91   you found the amulet of yendor! "
 \yendor$ = "found it!"
 \yendor=1  :rem player-yendor
 \tempmessage = 5
@@ -39,7 +40,8 @@ return
 
 {:treasure-food}
 t1 = int(rnd(1)*8+1)
-? vp$(5) li$ :?"\x91   you found" t1 "food."
+locate 5
+? li$ :?"\x91   you found" t1 "food."
 \food=\food + t1
 \tempmessage = 5
 return
@@ -76,7 +78,7 @@ if yn$ = "n" then return
 return
 
 {:treasure-util-position-line}
-? vp$(51);
+locate 51
 ?spc(6) li$
 ?spc(6) li$
 ?spc(6) li$

@@ -1,9 +1,7 @@
-;   ------------
+rem  ---------------------------------
 rem  initialize 
-;   ------------
+rem  ---------------------------------
 {:initialize}
-
-gosub {:vertical-position.init} :rem init vp$()
 
 l5$ = "\x91\x91\x91\x91\x91" :rem left 5
 
