@@ -1,0 +1,148 @@
+   30 dimg(10),a1$,a2$,a3$
+   35 poke36879,13:printchr$(30)
+   40 print"{clr}{swuc}{dish}"
+   50 print"{clr}{down}{down}lemonade 1986 by mark d. rejhon."
+   55 print"{down}vic-20 version 2009 by orion70"
+   60 print"{down}{down}what is your name";:inputn$
+   65 ifn$=""orlen(n$)>13thenprint"{clr}":goto50
+   70 print"{down}{down}"n$", you are going to operate":print"your lemonade stand for 12 weeks."
+   75 print"{down}your parents agreed to give you $12 to  ";
+   80 print"give you a good start for the summer.   ";
+   85 print"you will have to pay back your $12 at   ";
+   90 print"the end of the summer.":gosub2000
+  100 print"{clr}":wk=1:goto140
+  105 print"{clr}{down}"tab(30);"week"wk:print"CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC";
+  106 print"  {CBM-A}DEDEDEDEDEDEDED{CBM-S}"
+  107 print"  T               Y  total"
+  108 print"  B               B      kg"
+  109 print"  T     lemonade  Y      l of lemon c."
+  110 print"  B               B      paper cups"
+  111 print"  T               Y"
+  112 print"  {CBM-Z}F{CBM-R}FCFCFCFCFCF{CBM-R}F{CBM-X}"
+  114 print"    B           B"
+  115 print"    B           B"
+  116 print"    B_{CBM-Y}]        B"
+  117 print"    B( ) {rvon}{CBM-H}{CBM-H}{CBM-H}{CBM-H}{CBM-H}{CBM-H}{rvof} B"
+  118 print"   {rvon}{CBM-B}{rvof}EEEEEEEEEEEEE{CBM-B}"
+  119 print"   G{CBM-V}{CBM-G}{CBM-D}B{CBM-C} {CBM-H}{CBM-F}{CBM-V}H B{CBM-V}H"
+  120 print"   {CBM-G}{CBM-G}{CBM-F}{CBM-G} {CBM-F}{CBM-G} {CBM-F}B {CBM-V}{CBM-F}{CBM-D}{CBM-M}"
+  121 print"   G{CBM-F}{CBM-H}{CBM-C}H {CBM-D}B  {CBM-F}B {CBM-H}H"
+  122 print"   {CBM-G}G{CBM-D}B{CBM-F}H {CBM-F}B{CBM-F}B{CBM-F}B{CBM-F}{CBM-M}"
+  130 print"{CBM-+}{CBM-POUND}{CBM-POUND}{CBM-+}{CBM-+}{CBM-+}{CBM-+}{CBM-+}{CBM-+}{CBM-+}{CBM-+}{CBM-+}{CBM-+}{CBM-+}{CBM-+}{CBM-+}{CBM-+}{CBM-+}{CBM-POUND}{CBM-POUND}{CBM-+}{CBM-+}{CBM-POUND}{CBM-POUND}{CBM-POUND}{CBM-+}{CBM-+}{CBM-POUND}{CBM-POUND}{CBM-+}{CBM-+}{CBM-POUND}{CBM-POUND}{CBM-+}{CBM-POUND}{CBM-POUND}{CBM-+}{CBM-+}{CBM-+}{CBM-POUND}{home}"
+  135 print"{home}{down}{down}{down}{down}"tab(3);n$"'s":return
+  140 gosub105:m$=" 1200"
+  145 print"{home}{down}{down}{down}{down}"tab(28)"$ 12.00":printtab(20);s:printtab(20);l:printtab(20);c
+  150 sp$=str$(110+int(rnd(1)*25))
+  160 lp$=str$(100+int(rnd(1)*25))
+  180 cp$=str$(100+int(rnd(1)*25))
+  190 tf$=str$(int(rnd(1)*40+66))
+  193 tc$=str$(int((val(tf$)-32)*.56))
+  194 print"{home}{down}{down}{down}{down}{down}{down}{down}{down}"tab(5)"          "
+  195 print"{home}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}"tab(20);"prediction for"
+  197 printtab(20)"saturday:{down}":printtab(20)"the temperature"
+  200 ce=val(mid$(tc$,2,1))
+  202 iflen(tf$)=3thent=val(mid$(tf$,2,1))*10
+  204 iflen(tf$)=4thent=90
+  210 printtab(20)"in the"t"{left}'s f":printtab(26)ce"{left}0's c"
+  230 gosub940
+  240 gosub2120
+  245 print"{home}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}"tab(20);"temperature:{down}"
+  250 printtab(21);tf$" f":printtab(21);tc$" c":gosub2030
+  300 print"price for a cup of lemonade -=-=-=-=-=-"
+  305 print"in cents: --{left}{left}";:g=4:gosub2050:ifg(4)=0org(4)>80thengosub2030:goto300
+  307 print"{home}{down}{down}{down}{down}{down}{down}{down}{down}"tab(5)g(4)"{left} cents"
+  310 be$=str$(val(tf$)-57+int(rnd(1)*5)):se$=str$(g(4))
+  320 f=(val(se$)-val(be$)):ll=val(be$)*3-f:iff>0thenll=ll-val(be$)
+  321 bl=val(be$)*3:bn$=str$(val(be$)*bl)
+  322 gosub2030
+  325 be=0:fora=1toll
+  326 ifss=0ands=0thenro$="sugar":gosub2150:goto441
+  328 ifls=0andl=0thenro$="lemon concentrate":gosub2150:goto441
+  330 ifc=0thenro$="paper cups":gosub2150:goto441
+  340 ifss=0thens=s-1:ss=25
+  350 ifls=0thenl=l-1:ls=35
+  355 ss=ss-1:ls=ls-1:c=c-1:m$=str$(val(m$)+g(g)):be=be+g(g):bc$=str$(be)
+  360 print"{home}{down}{down}{down}{down}"tab(28)"$"left$(m$,2+len(m$)-4)"."right$(m$,2)" ":printtab(20);s"{left} "
+  370 printtab(20);l"{left} ":printtab(20);c"{left} "
+  380 nexta:gosub2030:fora=0to1200:next
+  385 ifll<1thenll=1
+  390 print"you made"ll"sales with"g(g)"cents."
+  400 print"you grossed $"left$(bc$,2+len(bc$)-4)"."right$(bc$,2)" .";
+  410 fora=0to6500:next:gosub2030:fora=0to500:next
+  415 ifval(bn$)>val(bc$)thenprint"you would have grossed $"left$(bn$,2+len(bn$)-4)".";
+  417 ifval(bn$)>val(bc$)thenprintright$(bn$,2)" if you":print"have charged"be$;
+  420 ifval(bn$)>val(bc$)thenprint" cents.":goto440
+  425 gosub2030:printg(4)"cents was the best price for today."
+  430 print"you're a good {rvon} businessman {rvof}."
+  435 tc=1:fora=1to130:foraa=56230to56242:pokeaa,tc:next:tc=tc+1:iftc=16thentc=1
+  437 next:goto441
+  440 fora=0to6500:next
+  441 ifwk=12then2200
+  442 wk=wk+1:print"{home}{down}"tab(30)"week"wk:gosub2120:gosub2030
+  445 goto150
+  900 end
+  940 print"{home}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}a 5 kg package of sugar costs $";
+  955 printleft$(sp$,2+len(sp$)-4)"."right$(sp$,2)
+  965 print"how many do you want to buy? ";:g=1:gosub2050
+  970 ifval(sp$)*g(1)>val(m$)thengosub2030:print"you don't have enough for"g(1)
+  973 ifval(sp$)*g(1)>val(m$)thenprint"5 kg packages of sugar.":fora=0to6000:next
+  975 ifval(sp$)*g(1)>val(m$)thengosub2030:goto940
+  980 m$=str$(val(m$)-(val(sp$)*g(1)))
+  985 print"{home}{down}{down}{down}{down}"tab(28);"$"left$(m$,2+len(m$)-4)"."right$(m$,2)"   "
+  990 s=s+g(1)*5:printtab(20);s"":gosub2030
+ 1000 print"a 1l bottle of lemon concentrate costs"
+ 1005 print"$"left$(lp$,2+len(lp$)-4)"."right$(lp$,2)"  how many do you want to ";
+ 1010 print"buy? ";:g=2:gosub2050
+ 1015 ifval(lp$)*g(2)>val(m$)thengosub2030:print"you don't have enough for"g(2)
+ 1020 ifval(lp$)*g(2)>val(m$)thenprint"1l bottles of lemon concentrate.":fora=0to6000:next
+ 1025 ifval(lp$)*g(2)>val(m$)thengosub2030:goto1000
+ 1030 m$=str$(val(m$)-(val(lp$)*g(2)))
+ 1035 print"{home}{down}{down}{down}{down}"tab(28);"$"left$(m$,2+len(m$)-4)"."right$(m$,2)"   {down}"
+ 1040 l=l+g(2):printtab(20);l"":gosub2030
+ 1045 print"a package of 100 paper cups costs"
+ 1050 print"$"left$(cp$,2+len(cp$)-4)"."right$(cp$,2)"  how many do you want? ";
+ 1053 g=3:gosub2050
+ 1055 ifval(cp$)*g(3)>val(m$)thengosub2030:print"you don't have enough for"g(3)
+ 1060 ifval(cp$)*g(3)>val(m$)thenprint"packages of 100 paper cups.":fora=0to6000:next
+ 1065 ifval(cp$)*g(3)>val(m$)thengosub2030:goto1045
+ 1070 m$=str$(val(m$)-(val(cp$)*g(3)))
+ 1075 print"{home}{down}{down}{down}{down}"tab(28);"$"left$(m$,2+len(m$)-4)"."right$(m$,2)"   {down}{down}"
+ 1080 c=c+(g(3)*100):printtab(20);c"":gosub2030:return
+ 1995 end
+ 2000 print"{home}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{rght}{rght}{rght}{rght}{rght}{rght}{rvon} press spacebar to continue "
+ 2010 geta$:ifa$<>" "then2010
+ 2020 return
+ 2030 print"{home}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}                                       "
+ 2035 print"                                       "
+ 2040 print"                                      {up}{up}{up}{up}";:print:return
+ 2050 geta1$:ifa1$=""then2050
+ 2053 ifasc(a1$)<48orasc(a1$)>57then2050
+ 2060 printa1$;
+ 2065 geta2$:ifa2$=""then2065
+ 2067 ifa2$=chr$(20)thenprintchr$(20);:a1$="":a2$="":goto2050
+ 2070 ifa2$=chr$(13)thena2$="":goto2110
+ 2075 ifasc(a2$)<48orasc(a2$)>57then2065
+ 2080 printa2$;
+ 2090 geta3$:ifa3$=""then2090
+ 2095 ifa3$=chr$(20)thenprintchr$(20);:a2$="":a3$="":goto2065
+ 2100 ifa3$=chr$(13)thena3$="":goto2110
+ 2105 goto2090
+ 2110 g(g)=val(a1$+a2$):a1$="":a2$="":a3$="":return
+ 2120 print"{home}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}";:fora=1to6:printtab(20);"                  ":next:return
+ 2150 gosub2030:fora=0to1200:next:print"you would have made $";:wm$=str$(ll*g(4))
+ 2160 printleft$(wm$,2+len(wm$)-4)"."right$(wm$,2)" if you ":print"hadn't run out of ";
+ 2170 printro$".":fora=0to6650:next:return
+ 2200 fora=0to600:next:print"{clr}{down}"
+ 2210 print"the summer is over. you have made"
+ 2215 print
+ 2220 print"$"left$(m$,2+len(m$)-4)"."right$(m$,2)". ";
+ 2230 print"you owe your parents $12 so":print:print"you ";
+ 2240 print"keep $";:m$=str$(val(m$)-1200):printleft$(m$,2+len(m$)-4)"."right$(m$,2)".";
+ 2250 print" you have"s"kg of":print:print"sugar and"l"bottles of lemon":print
+ 2260 print"concentrate and"c"paper cups left"
+ 2270 print:print"over.":gosub2000
+ 2280 print"{clr}{down}{down}play again?"
+ 2290 getp$:ifp$="y"thenrun
+ 2300 ifp$="n"thenprint"{clr}goodbye!":end
+ 2310 goto2290
+

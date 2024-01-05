@@ -1,0 +1,599 @@
+rem lemonade stand for x16, edit 2021 robert eaglestone
+rem boring notes at the end of this listing
+
+rem
+rem to use the pet font:
+rem
+VLOAD "PETFONT.BIN",8,1,0
+POKE $9F36,128
+
+longvar \down
+
+dim \down$(30)
+\down$(0)="\x13"
+forx=1to30:\down$(x)=\down$(x-1)+"\x11":next
+
+rem ------------------------------------
+rem
+rem
+rem  Commodore Title Page (ca. 1986)
+rem
+rem
+rem ------------------------------------
+{:title page}
+
+screen 0  :rem x16 40x25 mode
+color 5,0 :rem x16 green-on-black
+cls()
+
+PRINT"\X93\X11\X1D";
+FORI=1TO38:PRINT"\X12Š\X92";:NEXT
+FORI=1TO27:PRINT"\X11\X9D\X12Š\X92";:NEXT
+FORI=1TO37:PRINT"\X9D\X9D\X12Š\X92";:NEXT
+FORI=1TO27:PRINT"\X91\X9D\X12Š\X92";:NEXT
+rem ------------------------------------
+rem
+rem  print the commodore logo!
+rem
+rem ------------------------------------
+color 6,0 :rem ltblue on black
+PRINT"\X13\X11\X11\X11\X11\X11\X11\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X12©  \X92
+PRINT"\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X12 \X92  \X12 \X92©
+PRINT"\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X12 \X92  ";
+color 2,0 :rem red on black
+print "\X12£ß
+color 6,0 :rem ltblue on black
+PRINT"\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1Dß\X12  \X92
+color 5,0 :rem x16 green-on-black
+PRINT"\X11\X11\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1DC O M M O D O R E\X11\X11
+PRINT"\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1DEDUCATIONAL\X11\X11
+PRINT"\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1DSOFTWARE
+
+? \down$(24);"\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X1D\X12    PRESS SPACE BAR    \X92":I=0
+{:press space} get a$: if a$<>" " goto {:press space}
+;T1$="":T2$="":T3$="":T4$="":I=0
+
+gosub {:intro} :rem intro
+v=rnd(-ti) :rem seed randomizer
+
+?"{clr}{down}{down} LEMONADE STAND {down}{down}"
+input" what is your name";n$
+if n$="" goto {:title page} 
+n$=left$(n$,13)
+?
+rem ------------------------------------
+rem
+rem
+rem  Initialization
+rem
+rem
+rem ------------------------------------
+{:init}
+wk=10 :rem # of weeks to run
+b=10  :rem starting cash
+d1=0  :rem starting lemon concentrate
+a1=0  :rem starting sugar
+p1=0  :rem starting cups
+x=1
+
+?:?" " n$", you shall operate your"
+?:?" stand for"wk"weeks."
+gosub {:press spacebar} :rem spacebar
+rem ------------------------------------
+rem
+rem
+rem  Main Loop
+rem
+rem
+rem ------------------------------------
+{:loop}
+fx=0
+
+? "\x93\x11";
+?" week number" x
+? "
+? "                       YOU HAVE:
+? "
+? "    §£££££££££££££££¥         QTS/CONC
+? "    §               ¥         LBS/SUGAR
+TA=4+INT(((14-LEN(n$))/2)+.5)
+? TAB(TA)"\X91"n$"'S"
+? "    §   LEMONADE    ¥         CUPS
+? "    §               ¥         
+? "    §        CENTS  ¥  weather:
+? "    §£££££££££££££££¥  
+? "    § €€€           ¥  
+? "    § Í ÎÉ          ¥
+? "    § ( )Ë¡¡¡¡¡¡¡¡¡ ¥
+? "    §\X12©             ß\X92¥
+? "    \X12©               ß\X92
+? "    È(Ù@Ç()ÕÉÇ()Ç)Ç*Ç
+? "    È)Ù(Â)(ÊËÂ)(Â@Ç)Ç
+? "    È(Ù)Ç(×()Ç(*Ç)Ç(Ç
+? "    È)Ù(Â)(@(Â)(Â(Ç)Ç
+? "    È*Ù)Ç*)()Ç()Ç)Ç(Ç
+? "    È)Ù(Ç)()(Ç)(Ç(Ç)Ç
+? "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+;? "\X13\X11\X11\X11\X11\X11\X11"TAB(23)"\X121\X11\X9D2\X11\X9D3\X13\X11"
+
+gosub {:show values} :rem show values
+
+rem ------------------------------------
+rem
+rem  Predictions
+rem
+rem  t: temp
+rem  h: humidity
+rem  s: cost of sugar
+rem  l: cost of lemon concentrate
+rem  c: cost of cups
+rem  z: temp variation (actual)
+rem  t2: felt (low) temperature w/humidity
+rem  f2,f4: threshold values
+rem
+rem ------------------------------------
+T=(INT(RND(1)*3)+7)*10
+H=RND(1)
+IF H>.66 THEN H$="HIGH"
+IF H<.33 THEN H$="LOW"
+IF H>.32 AND H<.67 THEN H$="AVERAGE"
+S=.99+(.01)*INT(RND(1)*9):REM**COST OF SUGAR
+L=.69+(.01)*INT(RND(1)*9):REM**COST OF CONCENTRATE
+C=.90+(.01)*INT(RND(1)*9):REM**COST OF CUPS
+Z=-5+INT(RND(1)*20)
+T2=T+Z-INT(H*10)
+F2=INT(RND(1)*30)+70
+F4=(((T+Z+T2)-137.5)/25)
+IF F4<.1 THEN F4=.1
+IF F4>1  THEN F4=1
+
+gosub {:clear weatherboard} :rem clear w
+
+? \down$(11) tab(23) "prediction for"
+? \down$(12) tab(23) "saturday:"
+? \down$(14) tab(23) "TEMPERATURES IN"
+? \down$(15) tab(23) "THE"T"\X9D'S AND"
+? \down$(16) tab(23)  H$" HUMIDITY"
+
+rem ------------------------------------
+rem 
+rem 
+rem  buy lemon concentrate
+rem 
+rem 
+rem ------------------------------------
+{:lemons}
+gosub {:show values} :rem show values
+gosub {:clear directives} :rem clear d
+? \down$(23) "conc. lemon is $"l"a quart."
+? \down$(24) "how many quarts do you want to buy? ";
+gosub {:get number} :d=an 
+if d*l<b goto {:buy lemons}
+? "you don't have enough money"
+? "for "d" bottles."
+gosub {:press spacebar} :rem spacebar
+goto {:lemons}
+
+{:buy lemons}
+b=b-(d*l) :d1=d1+d
+gosub {:show values} :rem show values
+if fx=2 goto {:change items} :rem change
+
+rem ------------------------------------
+rem 
+rem 
+rem  buy sugar
+rem 
+rem 
+rem ------------------------------------
+{:sugar}
+gosub {:show values} :rem show values
+gosub {:clear directives} :rem clear d
+? \down$(23) "sugar is $"s"for a 5-lb bag."
+? \down$(24) "how many bags do you want to buy? ";
+gosub {:get number} :a=an
+if a*s<b goto {:buy sugar}
+? \down$(25) "you don't have enough money"
+? \down$(26) "for" a "bags."
+gosub {:press spacebar} :rem spacebar
+goto {:sugar}
+
+{:buy sugar}
+b=b-(a*s) :a1=a1+(5*a)
+gosub {:show values} :rem show values
+if fx=2 goto {:change items} :rem change
+
+rem ------------------------------------
+rem 
+rem 
+rem  buy cups
+rem 
+rem 
+rem ------------------------------------
+{:cups}
+gosub {:clear directives} :rem clear d
+? \down$(23) "cups are $"c"for a bag of 100."
+? \down$(24) "how many bags do you want to buy? ";
+gosub {:get number} :p=an
+if p*c<b goto {:buy cups}
+? "you don't have enough money"
+? "for"p"bags."
+goto {:cups}
+
+{:buy cups}
+b=b-(p*c):p1=p1+(p*100)
+gosub {:show values} :rem show values
+if fx=2 goto {:change items} :rem change
+
+rem ------------------------------------
+rem
+rem
+rem  Clear temperature prediction
+rem  And replace with actuals.
+rem
+rem
+rem ------------------------------------
+gosub {:clear weatherboard} :rem clear w
+
+? \down$(12) tab(23) "temperature:"z+t
+? \down$(13) tab(23) "WET BULB   :"T2
+
+{:change items}
+gosub {:clear directives} :rem clear d
+? \down$(23) "do you want to change any"
+? "of the items? [yn]";
+{:yesno} get yn$: if yn$="n" then {:price per cup}
+if yn$<>"y" goto {:yesno}
+fx=2
+gosub {:clear directives} :rem clear d
+? \down$(23) "which item: lemon=1   sugar=2   cups=3"
+ni$=""
+{:get item num} get ni$
+if ni$="1" then b=b+(a*s) :d1=d1-d       :goto {:lemons}
+if ni$="2" then b=b+(d*l) :a1=a1-(5*a)   :goto {:sugar}
+if ni$="3" then b=b+(p*c) :p1=p1-(p*100) :goto {:cups}
+goto {:get item num}
+
+{:price per cup}
+gosub {:clear directives} :rem clear d
+? \down$(23) "price (in cents) for a cup"
+? "of lemonade: ";
+gosub {:get number} :k=an
+if k<1 or k>80 goto {:price per cup}
+
+F3=3-((K/3)/((((T+Z+T2)-37.5)^3)/10^6))
+IF F3<0 THEN F3=0
+
+gosub {:clear directives} :rem clear d
+? \down$(9) tab(9) k :rem price per cup
+
+F1=INT(F2*F3*F4)
+IF F1<0 THEN F1=0
+IF F1<1 THEN W=1: IF F1<1 GOTO {:gross}
+
+rem ------------------------------------
+rem 
+rem 
+rem  run the simulation f1 times
+rem
+rem 
+;    old line: 2300
+rem ------------------------------------
+{:run sim}
+FOR W=1 TO F1
+   IF P1<.01 THENP1=0
+   IF D1<.01 THEND1=0
+   IF A1<.01 THENA1=0
+   IF P1=0 OR A1=0 OR D1=0 GOTO {:sim done}
+   gosub {:show values} :rem show values
+   D1=D1-(1/40)
+   A1=A1-(1/20)
+   P1=P1-1
+   B=B+(K*.01)
+NEXT W
+{:sim done}
+
+gosub {:show values} :rem show values
+
+rem ------------------------------------
+rem 
+rem 
+rem  display results and commentary
+rem
+rem 
+rem ------------------------------------
+{:run sim}
+IF W=F1 GOTO {:gross}
+
+mm$="CUPS."
+if p1<=0 then gosub {:you woulda}
+mm$="lemon juice."
+if d1<=0 then gosub {:you woulda}
+mm$="sugar."
+if a1<=0 then gosub {:you woulda}
+
+{:gross}
+gosub {:clear directives} :rem clear d
+? \down$(23) "YOU MADE"W-1"SALES AT"K"CENTS A CUP."
+? \down$(24) "YOU GROSSED $"(W-1)*(K/100)"\X9D."
+
+FOR K1=1 TO 50
+   F5=3-((K1/3)/((((T+Z+T2)-37.5)^3/10^6)))
+   G5=(INT(F5*F2*F4))*(K1/100)
+   IF G5<G9 GOTO {:next k1}
+   G9=G5
+   K9=K1
+{:next k1}
+NEXTK1
+
+IF K9=K GOTO {:best price} :rem best price
+
+? \down$(25) "YOU COULD HAVE GROSSED $"G9"TODAY,"
+? \down$(26) "IF YOU HAD CHARGED"K9"CENTS."
+goto {:commentary done}
+
+{:best price}
+? \down$(25)  K "CENTS WAS THE BEST PRICE FOR TODAY."
+IF FX<>1 THEN ? \down$(26) "YOU'RE A GOOD BUSINESSPERSON."
+COUNT=COUNT+1
+
+{:commentary done}
+K9=0:G9=0
+gosub {:short wait} :rem wait
+gosub {:press spacebar} :rem spacebar
+
+X=X+1: IF X<=WK goto {:loop} :rem loop
+
+rem ------------------------------------
+rem 
+rem 
+rem  end / summary
+rem
+rem 
+rem ------------------------------------
+cls()
+? "{rvon}summer's end{rvof}"
+?:? " the summer is over."
+?:? " you have $"b"."
+?:? " you owe your family $10, so"
+?:? " you earned $"b-10"this summer."
+?:? " you have"p1"cups,"int(d1)"bottles of"
+?:? " lemon juice, and"int(a1)"lbs of"
+?:? " sugar left over."
+
+if count<wk/2 goto {:not gifted}
+?
+?:? " " n$ ", you are truly a gifted business-"
+?:? " person. "; int(count/(x-1)*100);"% of your prices"
+?:? " were the best possible!! "
+?:? " the rockefellers and gettys of the"
+?:? " world salute you."
+
+{:not gifted}
+
+gosub {:press spacebar}
+
+screen $02 :rem x16 back to 80x60
+
+?:?:? "thank you for playing!"
+
+end
+
+rem ------------------------------------
+rem
+rem
+rem
+rem       subroutines begin here
+rem
+rem
+rem
+rem ------------------------------------
+rem ------------------------------------
+rem
+rem
+rem  show values (old line 3130)
+rem
+rem
+rem ------------------------------------
+{:show values}
+FORU=1TO6
+   IF MID$(STR$(B),U,1)="."GOTO {:update cash}
+NEXT U
+GOTO {:print values}
+
+{:update cash}
+B=VAL(LEFT$(STR$(B),U+2))
+B=INT(B*100)/100
+
+{:print values}
+U6=ABS(B)+1
+U7=INT(U6)
+U6$=STR$(U7-1)+"."+MID$(STR$(U6)+"00000",LEN(STR$(U7))+2,2)
+
+? \down$(4) TAB(23)"          \X9D\X9D\X9D\X9D\X9D\x9d\x9d$" U6$
+? \down$(5) TAB(23)"       \X9D\X9D\X9D\X9D\X9D" INT(D1)
+? \down$(6) TAB(23)"       \X9D\X9D\X9D\X9D\X9D" INT(A1)
+? \down$(7) TAB(23)"       \X9D\X9D\X9D\X9D\X9D" P1
+return
+
+rem ------------------------------------
+rem
+rem
+rem  Press Space To Continue
+rem 
+rem
+rem ------------------------------------
+{:press spacebar}
+? \down$(27) "{rght}{rght}{rght}{rght}{rght}{rght}{rvon} press spacebar to continue "
+{:psloop} geta$:ifa$<>" "then {:psloop}
+return
+
+rem ------------------------------------
+rem
+rem
+rem  A short wait (100 jiffys)
+rem
+rem
+rem ------------------------------------
+{:short wait}
+TT=TI+100
+{:short wait 2170} IF TT>TI GOTO {:short wait 2170}
+return
+
+rem ------------------------------------
+rem
+rem
+rem  You Would Have Made <f1> Sales, 
+rem           if you had more <mm$>.
+rem
+rem
+rem ------------------------------------
+{:you woulda}
+gosub {:clear directives} :rem clear d
+? \down$(23) "YOU WOULD HAVE MADE"F1"SALES,"
+? \down$(24) "if you had more " mm$
+FX=1
+gosub {:short wait} :rem wait
+return
+
+rem ------------------------------------
+rem
+rem
+rem  Clear Weatherboard
+rem
+rem
+rem ------------------------------------
+{:clear weatherboard}
+for v=10 to 18
+? \down$(v) tab(23) "                "
+next v
+return
+
+rem ------------------------------------
+rem
+rem
+rem  Clear Directives
+rem
+rem
+;  This is kind of like old line 3090
+rem ------------------------------------
+{:clear directives}
+for v=23 to 28
+? \down$(v) "                                       "
+next v
+return
+
+rem ------------------------------------
+rem
+rem
+rem  Digit Collection
+rem
+rem
+rem ------------------------------------
+{:get number}
+
+{:get digit 1} get a1$ :if a1$<"0" or a1$>"9" goto {:get digit 1}
+? a1$;
+
+{:get digit 2} get a2$ :if a2$="" goto {:get digit 2}
+if a2$=chr$(20) then ? chr$(20); :goto {:get number}
+if a2$=chr$(13) then a2$="" :goto {:get value}
+if a2$<"0" or a2$>"9" then {:get digit 2}
+? a2$;
+
+{:get digit 3} get a3$ :if a3$="" goto {:get digit 3}
+if a3$=chr$(20) then ? chr$(20); :goto {:get digit 2}
+if a3$<>chr$(13) goto {:get digit 3}
+
+{:get value}
+an=val(a1$+a2$)
+return
+
+rem ------------------------------------
+rem
+rem
+rem  Introduction
+rem
+rem
+rem ------------------------------------
+{:intro}
+cls();
+? chr$(14);
+;? " {rvon}Ìemonade Stand{rvof}"
+? " {rvon}Lemonade Stand{rvof}"
+?
+;? " Ùou've decided to run a lemonade stand"
+? " You've decided to run a lemonade stand"
+? " for 12 saturdays this summer in order "
+? " to make some money. Âut you soon find "
+? " that running a stand costs money."
+;? " Ùour job is to make as big a profit as"
+? " Your job is to make as big a profit as"
+? " you can."
+?
+;? " Ùour family agrees to stake you $10 in"
+? " Your family agrees to stake you $10 in"
+;? " order to get started. Át the end of "
+? " order to get started. At the end of "
+? " the summer you will have to return the"
+? " $10, but you will not need to pay"
+? " interest."
+?
+;? " Éf you keep your price low, you'll sell";
+? " If you keep your price low, you'll sell";
+? " more lemonade, but will make less money";
+? " on each sale."
+;? " Ïn hot or humid days, you will sell"
+? " On hot or humid days, you will sell"
+? " more lemonade and also be able to"
+? " charge more per cup."
+;? " ×hen the wet bulb reading is close to"
+? " When the wet bulb reading is close to"
+? " the temperature, it is a humid day."
+gosub {:short wait} :rem wait
+gosub {:press spacebar} :rem spacebar
+cls():? chr$(142)
+return
+
+"-----------------------------------------------------
+:
+:
+"lemonade stand design notes, r.eaglestone 2021
+:
+:
+"-----------------------------------------------------
+"my goal is to re-create the original PET experience,
+"but on the X16 with a 40 x 25 display.  i go so far as 
+"to use the original starting cash amount, original 
+"imperial units, and a green-on-black display.
+:
+"there are a very few X16-specific commands used:
+"'color' and 'screen' to be exact.
+:
+"what is unchanged are the algorithms used to 
+"calculate the prices, temperatures, and demand --
+"i.e. the core mechanics of the game itself.
+:
+"efforts to find the source returned two late variants:
+"(1) a vic-20 listing made in 2009
+"(2) the c64 version from 1986
+:
+"the vic-20 version is greatly stripped down, which
+"actually was a boon since it laid bare the fundamental
+"structure of the game.
+:
+"the c64 version is about 50% boilerplate and 
+"frivolous pokes, including some ML to prevent the
+"code from being modified.  at the same time, that
+"version notes that the program was in the public
+"domain. its code is more faithful to the original,
+"as well, although differences exist.
+:
+"this version was rebuilt using the vic-20 version
+"to recapture the original flow, then adapting the
+"1986 logic into the framework, piece by piece.
+:
+"subroutines are not equivalent to the originals.
+"in fact, even the interface is not the same, since
+"i used the original PET view as the template,
+"rather than the c64/v20 versions, which differ.

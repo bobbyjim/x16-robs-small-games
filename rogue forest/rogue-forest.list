@@ -26,6 +26,9 @@ longvar \int       c5
 
 longvar \tempmessage t0
 
+longvar inventory_weapons%(10)
+longvar inventory_armor%(10)
+
 gosub {:initialize}  :rem init game
 gosub {:sound-init}  :rem init sound
 gosub {:panels.init} :rem init panels
@@ -58,7 +61,6 @@ gosub {:forest-build}  :rem build forest
 \upp(4) = \int
 \yendor$ = "not yet"
 
-dim iw%(10), ia%(10) :rem weapons, armor
 rem =====================================================================
 rem
 rem
