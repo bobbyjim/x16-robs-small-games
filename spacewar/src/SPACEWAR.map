@@ -2,7 +2,7 @@ Modules list:
 -------------
 main.o:
     CODE              Offs=000000  Size=0003A8  Align=00001  Fill=0000
-    RODATA            Offs=000000  Size=000013  Align=00001  Fill=0000
+    RODATA            Offs=000000  Size=000014  Align=00001  Fill=0000
     BSS               Offs=000000  Size=000038  Align=00001  Fill=0000
 sprite.o:
     CODE              Offs=0003A8  Size=000330  Align=00001  Fill=0000
@@ -15,9 +15,9 @@ timer.o:
 /Users/rje/git/cc65/lib/cx16.lib(_cursor.o):
     BSS               Offs=000040  Size=000001  Align=00001  Fill=0000
 /Users/rje/git/cc65/lib/cx16.lib(_hextab.o):
-    RODATA            Offs=000013  Size=000010  Align=00001  Fill=0000
+    RODATA            Offs=000014  Size=000010  Align=00001  Fill=0000
 /Users/rje/git/cc65/lib/cx16.lib(_longminstr.o):
-    RODATA            Offs=000023  Size=00000C  Align=00001  Fill=0000
+    RODATA            Offs=000024  Size=00000C  Align=00001  Fill=0000
 /Users/rje/git/cc65/lib/cx16.lib(_oserror.o):
     BSS               Offs=000041  Size=000001  Align=00001  Fill=0000
 /Users/rje/git/cc65/lib/cx16.lib(_printf.o):
@@ -71,13 +71,13 @@ timer.o:
     BSS               Offs=00006D  Size=000001  Align=00001  Fill=0000
 /Users/rje/git/cc65/lib/cx16.lib(cputc.o):
     CODE              Offs=000D5A  Size=000062  Align=00001  Fill=0000
-    RODATA            Offs=00002F  Size=000008  Align=00001  Fill=0000
+    RODATA            Offs=000030  Size=000008  Align=00001  Fill=0000
 /Users/rje/git/cc65/lib/cx16.lib(crt0.o):
     STARTUP           Offs=000000  Size=000021  Align=00001  Fill=0000
     ONCE              Offs=00000C  Size=00001B  Align=00001  Fill=0000
     INIT              Offs=000000  Size=000002  Align=00001  Fill=0000
 /Users/rje/git/cc65/lib/cx16.lib(ctype.o):
-    RODATA            Offs=000037  Size=00008B  Align=00001  Fill=0000
+    RODATA            Offs=000038  Size=00008B  Align=00001  Fill=0000
 /Users/rje/git/cc65/lib/cx16.lib(ctypemask.o):
     CODE              Offs=000DBC  Size=00001E  Align=00001  Fill=0000
 /Users/rje/git/cc65/lib/cx16.lib(decax1.o):
@@ -161,7 +161,7 @@ timer.o:
     CODE              Offs=001207  Size=00003C  Align=00001  Fill=0000
 /Users/rje/git/cc65/lib/cx16.lib(mktime.o):
     CODE              Offs=001243  Size=0003D1  Align=00001  Fill=0000
-    RODATA            Offs=0000C2  Size=00002E  Align=00001  Fill=0000
+    RODATA            Offs=0000C3  Size=00002E  Align=00001  Fill=0000
 /Users/rje/git/cc65/lib/cx16.lib(mod.o):
     CODE              Offs=001614  Size=000011  Align=00001  Fill=0000
 /Users/rje/git/cc65/lib/cx16.lib(mul.o):
@@ -239,11 +239,11 @@ LOADADDR              0007FF  000800  000002  00001
 EXEHDR                000801  00080C  00000C  00001
 STARTUP               00080D  00082D  000021  00001
 CODE                  00082E  00218E  001961  00001
-RODATA                00218F  00227E  0000F0  00001
-DATA                  00227F  00233F  0000C1  00001
-INIT                  002340  002341  000002  00001
-BSS                   002342  0023AF  00006E  00001
-ONCE                  002342  00236A  000029  00001
+RODATA                00218F  00227F  0000F1  00001
+DATA                  002280  002340  0000C1  00001
+INIT                  002341  002342  000002  00001
+BSS                   002343  0023B0  00006E  00001
+ONCE                  002343  00236B  000029  00001
 
 
 Exports list by name:
@@ -253,18 +253,18 @@ CLOCK_GET_DATE_TIME       00FF50 RLA    GETIN                     00FFE4 RLA
 KBDBUF_PEEK               00FEBD RLA    LOAD                      00FFD5 RLA    
 PLOT                      00FFF0 RLA    RDTIM                     00FFDE RLA    
 SETLFS                    00FFBA RLA    SETNAM                    00FFBD RLA    
-SETTIM                    00FFDB RLA    TM                        002326 RLA    
-__BSS_RUN__               002342 RLA    __BSS_SIZE__              00006E REA    
-__CONSTRUCTOR_COUNT__     000001 REA    __CONSTRUCTOR_TABLE__     002369 RLA    
-__DESTRUCTOR_COUNT__      000000 REA    __DESTRUCTOR_TABLE__      00227F RLA    
+SETTIM                    00FFDB RLA    TM                        002327 RLA    
+__BSS_RUN__               002343 RLA    __BSS_SIZE__              00006E REA    
+__CONSTRUCTOR_COUNT__     000001 REA    __CONSTRUCTOR_TABLE__     00236A RLA    
+__DESTRUCTOR_COUNT__      000000 REA    __DESTRUCTOR_TABLE__      002280 RLA    
 __EXEHDR__                000001 REA    __HEADER_LAST__           00080D RLA    
 __HIMEM__                 009F00 REA    __LOADADDR__              000001 REA    
 __MAIN_SIZE__             0096F3 REA    __MAIN_START__            00080D RLA    
-__ONCE_RUN__              002342 RLA    __STACKSIZE__             000800 REA    
-__STARTUP__               000001 REA    __ctype                   0021C6 RLA    
-__ctypeidx                0021D1 RLA    __hextab                  0021A2 RLA    
-__longminstr              0021B2 RLA    __oserror                 002383 RLA    
-__printf                  0010FD RLA    __tz                      002317 RLA    
+__ONCE_RUN__              002343 RLA    __STACKSIZE__             000800 REA    
+__STARTUP__               000001 REA    __ctype                   0021C7 RLA    
+__ctypeidx                0021D2 RLA    __hextab                  0021A3 RLA    
+__longminstr              0021B3 RLA    __oserror                 002384 RLA    
+__printf                  0010FD RLA    __tz                      002318 RLA    
 _bgcolor                  00153B RLA    _cbm_k_bsout              00FFD2 RLA    
 _cbm_k_load               00144C RLA    _cbm_k_setlfs             001469 RLA    
 _cbm_k_setnam             001477 RLA    _cgetc                    0014A1 RLA    
@@ -284,7 +284,7 @@ aslax3                    0013EE RLA    asrax1                    00140D RLA
 asrax2                    001417 RLA    asrax4                    001426 RLA    
 axlong                    00143F RLA    axulong                   001445 RLA    
 boolult                   001A28 RLA    callmain                  00148A RLA    
-ctypemaskdirect           0015EE RLA    cursor                    002382 RLA    
+ctypemaskdirect           0015EE RLA    cursor                    002383 RLA    
 decax1                    001608 RLA    decaxy                    00160F RLA    
 decsp2                    001618 RLA    decsp4                    001625 RLA    
 decsp6                    001632 RLA    donelib                   001552 RLA    
@@ -294,7 +294,7 @@ incax6                    0016F9 RLA    incax8                    0016FE RLA
 incaxy                    001705 RLA    incsp1                    00170E RLA    
 incsp2                    00171C RLA    incsp3                    00172A RLA    
 incsp4                    00172F RLA    incsp6                    001734 RLA    
-initclock                 001508  LAI   initlib                   002342 RLA    
+initclock                 001508  LAI   initlib                   002343 RLA    
 ldaidx                    00179D RLA    ldax0sp                   0017B6 RLA    
 ldaxi                     0017A9 RLA    ldaxidx                   0017AB RLA    
 ldaxysp                   0017B8 RLA    ldeaxysp                  0017C1 RLA    
@@ -400,13 +400,13 @@ _strlower                 00204C RLA    tossubax                  002075 RLA
 load_jiffy                002087 RLA    udiv16                    0020A5 RLA    
 tosumoda0                 0020E3 RLA    tosumodax                 0020E5 RLA    
 _vcprintf                 00213C RLA    zerobss                   00216C RLA    
-__hextab                  0021A2 RLA    __longminstr              0021B2 RLA    
-__ctype                   0021C6 RLA    __ctypeidx                0021D1 RLA    
-__DESTRUCTOR_TABLE__      00227F RLA    __tz                      002317 RLA    
-TM                        002326 RLA    initlib                   002342 RLA    
-__BSS_RUN__               002342 RLA    __ONCE_RUN__              002342 RLA    
-__CONSTRUCTOR_TABLE__     002369 RLA    cursor                    002382 RLA    
-__oserror                 002383 RLA    __MAIN_SIZE__             0096F3 REA    
+__hextab                  0021A3 RLA    __longminstr              0021B3 RLA    
+__ctype                   0021C7 RLA    __ctypeidx                0021D2 RLA    
+__DESTRUCTOR_TABLE__      002280 RLA    __tz                      002318 RLA    
+TM                        002327 RLA    initlib                   002343 RLA    
+__BSS_RUN__               002343 RLA    __ONCE_RUN__              002343 RLA    
+__CONSTRUCTOR_TABLE__     00236A RLA    cursor                    002383 RLA    
+__oserror                 002384 RLA    __MAIN_SIZE__             0096F3 REA    
 __HIMEM__                 009F00 REA    KBDBUF_PEEK               00FEBD RLA    
 CLOCK_GET_DATE_TIME       00FF50 RLA    SETLFS                    00FFBA RLA    
 SETNAM                    00FFBD RLA    CHROUT                    00FFD2 RLA    

@@ -59,7 +59,7 @@ void initSprites()
    star_def.x               = SPRITE_X_SCALE(STAR_X);
    star_def.y               = SPRITE_Y_SCALE(STAR_Y);
 
-   sprite_define(2, &star_def);
+   sprite_define(0, &star_def);
    
    asteroid_def = star_def;
    asteroid_def.block       = ASTEROID_ADDR;
@@ -189,7 +189,7 @@ void main()
    clrscr();
 
    // load sprites to vera
-   cbm_k_setnam("sw-sprites.bin");
+   cbm_k_setnam("sw-sprites2.bin");
    cbm_k_setlfs(0,8,0);
    cbm_k_load(LOAD_TO_VERA, SPRITE_ADDR_BEGIN);
 
