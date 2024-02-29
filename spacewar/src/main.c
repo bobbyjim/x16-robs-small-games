@@ -247,13 +247,13 @@ void main()
 {
    unsigned char done = 0;
 
-   cbm_k_bsout(CH_FONT_UPPER);
+   cbm_k_bsout(CH_FONT_UPPER); // cbm.h
 
    bgcolor(0); // lets background layer in
    clrscr();
 
    // load sprites to vera
-   cbm_k_setnam("temp-sprites2.bin");
+   cbm_k_setnam("sw-sprites.bin");
    cbm_k_setlfs(0,8,0);
    cbm_k_load(LOAD_TO_VERA, SPRITE_ADDR_BEGIN);
 

@@ -2,7 +2,7 @@ Modules list:
 -------------
 main.o:
     CODE              Offs=000000  Size=000660  Align=00001  Fill=0000
-    RODATA            Offs=000000  Size=000012  Align=00001  Fill=0000
+    RODATA            Offs=000000  Size=00000F  Align=00001  Fill=0000
     BSS               Offs=000000  Size=000042  Align=00001  Fill=0000
     DATA              Offs=000000  Size=0000CC  Align=00001  Fill=0000
 sprite.o:
@@ -131,7 +131,7 @@ timer.o:
     CODE              Offs=000EF8  Size=00002C  Align=00001  Fill=0000
 /Users/rje/git/cc65/lib/cx16.lib(mktime.o):
     CODE              Offs=000F24  Size=0003D1  Align=00001  Fill=0000
-    RODATA            Offs=000012  Size=00002E  Align=00001  Fill=0000
+    RODATA            Offs=00000F  Size=00002E  Align=00001  Fill=0000
 /Users/rje/git/cc65/lib/cx16.lib(mul.o):
     CODE              Offs=0012F5  Size=000045  Align=00001  Fill=0000
 /Users/rje/git/cc65/lib/cx16.lib(mul8.o):
@@ -198,11 +198,11 @@ LOADADDR              0007FF  000800  000002  00001
 EXEHDR                000801  00080C  00000C  00001
 STARTUP               00080D  00082D  000021  00001
 CODE                  00082E  001DA4  001577  00001
-RODATA                001DA5  001DE4  000040  00001
-DATA                  001DE5  001EFA  000116  00001
-INIT                  001EFB  001EFC  000002  00001
-BSS                   001EFD  001F48  00004C  00001
-ONCE                  001EFD  001F25  000029  00001
+RODATA                001DA5  001DE1  00003D  00001
+DATA                  001DE2  001EF7  000116  00001
+INIT                  001EF8  001EF9  000002  00001
+BSS                   001EFA  001F45  00004C  00001
+ONCE                  001EFA  001F22  000029  00001
 
 
 Exports list by name:
@@ -212,15 +212,15 @@ CLOCK_GET_DATE_TIME       00FF50 RLA    GETIN                     00FFE4 RLA
 KBDBUF_PEEK               00FEBD RLA    LOAD                      00FFD5 RLA    
 RDTIM                     00FFDE RLA    SETLFS                    00FFBA RLA    
 SETNAM                    00FFBD RLA    SETTIM                    00FFDB RLA    
-TM                        001EE9 RLA    __BSS_RUN__               001EFD RLA    
+TM                        001EE6 RLA    __BSS_RUN__               001EFA RLA    
 __BSS_SIZE__              00004C REA    __CONSTRUCTOR_COUNT__     000001 REA    
-__CONSTRUCTOR_TABLE__     001F24 RLA    __DESTRUCTOR_COUNT__      000000 REA    
-__DESTRUCTOR_TABLE__      001DE5 RLA    __EXEHDR__                000001 REA    
+__CONSTRUCTOR_TABLE__     001F21 RLA    __DESTRUCTOR_COUNT__      000000 REA    
+__DESTRUCTOR_TABLE__      001DE2 RLA    __EXEHDR__                000001 REA    
 __HEADER_LAST__           00080D RLA    __HIMEM__                 009F00 REA    
 __LOADADDR__              000001 REA    __MAIN_SIZE__             0096F3 REA    
-__MAIN_START__            00080D RLA    __ONCE_RUN__              001EFD RLA    
+__MAIN_START__            00080D RLA    __ONCE_RUN__              001EFA RLA    
 __STACKSIZE__             000800 REA    __STARTUP__               000001 REA    
-__oserror                 001F48 RLA    __tz                      001EDA RLA    
+__oserror                 001F45 RLA    __tz                      001ED7 RLA    
 _bgcolor                  0013BE RLA    _cbm_k_bsout              00FFD2 RLA    
 _cbm_k_load               0012CF RLA    _cbm_k_setlfs             0012EC RLA    
 _cbm_k_setnam             0012FA RLA    _cgetc                    001324 RLA    
@@ -236,7 +236,7 @@ aslax1                    001269 RLA    aslax3                    001271 RLA
 aslax4                    00127F RLA    asrax1                    001290 RLA    
 asrax2                    00129A RLA    asrax4                    0012A9 RLA    
 axulong                   0012C8 RLA    boolult                   001745 RLA    
-callmain                  00130D RLA    cursor                    001F47 RLA    
+callmain                  00130D RLA    cursor                    001F44 RLA    
 decax1                    0013E1 RLA    decaxy                    0013E8 RLA    
 decsp4                    0013F1 RLA    donelib                   0013D5 RLA    
 getlop                    0016B8 RLA    incax2                    0014A2 RLA    
@@ -245,7 +245,7 @@ incaxy                    0014B0 RLA    incsp1                    0014B9 RLA
 incsp2                    0014C7 RLA    incsp3                    0014D5 RLA    
 incsp4                    0014DA RLA    incsp6                    0014DF RLA    
 incsp8                    0014E4 RLA    initclock                 00138B  LAI   
-initlib                   001EFD RLA    ldaidx                    00154D RLA    
+initlib                   001EFA RLA    ldaidx                    00154D RLA    
 ldax0sp                   001566 RLA    ldaxi                     001559 RLA    
 ldaxidx                   00155B RLA    ldaxysp                   001568 RLA    
 ldeaxysp                  001571 RLA    load_jiffy                001D15 RLA    
@@ -345,11 +345,11 @@ staxspidx                 001CC5 RLA    steaxspidx                001CDF RLA
 tossubax                  001D03 RLA    load_jiffy                001D15 RLA    
 udiv16                    001D33 RLA    tosumoda0                 001D71 RLA    
 tosumodax                 001D73 RLA    zerobss                   001D82 RLA    
-__DESTRUCTOR_TABLE__      001DE5 RLA    __tz                      001EDA RLA    
-TM                        001EE9 RLA    __BSS_RUN__               001EFD RLA    
-__ONCE_RUN__              001EFD RLA    initlib                   001EFD RLA    
-__CONSTRUCTOR_TABLE__     001F24 RLA    cursor                    001F47 RLA    
-__oserror                 001F48 RLA    __MAIN_SIZE__             0096F3 REA    
+__DESTRUCTOR_TABLE__      001DE2 RLA    __tz                      001ED7 RLA    
+TM                        001EE6 RLA    __BSS_RUN__               001EFA RLA    
+__ONCE_RUN__              001EFA RLA    initlib                   001EFA RLA    
+__CONSTRUCTOR_TABLE__     001F21 RLA    cursor                    001F44 RLA    
+__oserror                 001F45 RLA    __MAIN_SIZE__             0096F3 REA    
 __HIMEM__                 009F00 REA    KBDBUF_PEEK               00FEBD RLA    
 CLOCK_GET_DATE_TIME       00FF50 RLA    SETLFS                    00FFBA RLA    
 SETNAM                    00FFBD RLA    CHROUT                    00FFD2 RLA    
@@ -472,7 +472,7 @@ addysp (addysp.o):
     incsp6.o                  runtime/incsp6.s:8
     incsp4.o                  runtime/incsp4.s:8
     incsp3.o                  runtime/incsp3.s:8
-    main.o                    main.s:1054
+    main.o                    main.s:1053
 addysp1 (addysp.o):
     lsub.o                    runtime/lsub.s:11
     sub.o                     runtime/sub.s:8
@@ -481,9 +481,9 @@ addysp1 (addysp.o):
     ladd.o                    runtime/ladd.s:8
 aslax1 (aslax1.o):
     mktime.o                  ../libwrk/cx16/mktime.s:614
-    main.o                    main.s:1054
-    main.o                    main.s:1054
-    main.o                    main.s:1054
+    main.o                    main.s:1053
+    main.o                    main.s:1053
+    main.o                    main.s:1053
 aslax3 (aslax3.o):
     sprite.o                  sprite.s:497
     sprite.o                  sprite.s:497
@@ -491,17 +491,17 @@ aslax3 (aslax3.o):
     sprite.o                  sprite.s:497
     sprite.o                  sprite.s:497
 aslax4 (aslax4.o):
-    main.o                    main.s:1054
+    main.o                    main.s:1053
 asrax1 (asrax1.o):
     sprite.o                  sprite.s:497
     sprite.o                  sprite.s:497
-    main.o                    main.s:1054
+    main.o                    main.s:1053
 asrax2 (asrax2.o):
-    main.o                    main.s:1054
+    main.o                    main.s:1053
 asrax4 (asrax4.o):
     sprite.o                  sprite.s:497
     sprite.o                  sprite.s:497
-    main.o                    main.s:1054
+    main.o                    main.s:1053
 axulong (axlong.o):
     mktime.o                  ../libwrk/cx16/mktime.s:614
     timer.o                   timer.s:93
@@ -515,8 +515,8 @@ decax1 (decax1.o):
     mktime.o                  ../libwrk/cx16/mktime.s:614
 decaxy (decaxy.o):
     mktime.o                  ../libwrk/cx16/mktime.s:614
-    main.o                    main.s:1054
-    main.o                    main.s:1054
+    main.o                    main.s:1053
+    main.o                    main.s:1053
 decsp4 (decsp4.o):
     mktime.o                  ../libwrk/cx16/mktime.s:614
     lpush.o                   runtime/lpush.s:12
@@ -533,11 +533,11 @@ incax6 (incax6.o):
     sprite.o                  sprite.s:497
 incaxy (incaxy.o):
     incax6.o                  runtime/incax6.s:8
-    main.o                    main.s:1054
+    main.o                    main.s:1053
 incsp1 (incsp1.o):
     gettime.o                 cx16/gettime.s:10
     sprite.o                  sprite.s:497
-    main.o                    main.s:1054
+    main.o                    main.s:1053
 incsp2 (incsp2.o):
     staxspi.o                 runtime/staxspi.s:9
     staspidx.o                runtime/staspidx.s:8
@@ -549,16 +549,16 @@ incsp3 (incsp3.o):
     sprite.o                  sprite.s:497
     sprite.o                  sprite.s:497
     sprite.o                  sprite.s:497
-    main.o                    main.s:1054
+    main.o                    main.s:1053
 incsp4 (incsp4.o):
     lcmp.o                    runtime/lcmp.s:9
     sprite.o                  sprite.s:497
-    main.o                    main.s:1054
+    main.o                    main.s:1053
 incsp6 (incsp6.o):
     timer.o                   timer.s:93
-    main.o                    main.s:1054
+    main.o                    main.s:1053
 incsp8 (incsp8.o):
-    main.o                    main.s:1054
+    main.o                    main.s:1053
 initlib (condes.o):
     crt0.o                    cx16/crt0.s:8
 ldaidx (ldai.o):
@@ -570,29 +570,29 @@ ldax0sp (ldaxsp.o):
     sprite.o                  sprite.s:497
     sprite.o                  sprite.s:497
     sprite.o                  sprite.s:497
-    main.o                    main.s:1054
-    main.o                    main.s:1054
-    main.o                    main.s:1054
+    main.o                    main.s:1053
+    main.o                    main.s:1053
+    main.o                    main.s:1053
 ldaxi (ldaxi.o):
     mktime.o                  ../libwrk/cx16/mktime.s:614
     sprite.o                  sprite.s:497
     sprite.o                  sprite.s:497
-    main.o                    main.s:1054
-    main.o                    main.s:1054
+    main.o                    main.s:1053
+    main.o                    main.s:1053
 ldaxidx (ldaxi.o):
     sprite.o                  sprite.s:497
     sprite.o                  sprite.s:497
-    main.o                    main.s:1054
-    main.o                    main.s:1054
+    main.o                    main.s:1053
+    main.o                    main.s:1053
 ldaxysp (ldaxsp.o):
     mktime.o                  ../libwrk/cx16/mktime.s:614
     timer.o                   timer.s:93
     sprite.o                  sprite.s:497
-    main.o                    main.s:1054
-    main.o                    main.s:1054
-    main.o                    main.s:1054
-    main.o                    main.s:1054
-    main.o                    main.s:1054
+    main.o                    main.s:1053
+    main.o                    main.s:1053
+    main.o                    main.s:1053
+    main.o                    main.s:1053
+    main.o                    main.s:1053
 ldeaxysp (ldeaxysp.o):
     timer.o                   timer.s:93
 load_jiffy (tmcommon.o):
@@ -662,21 +662,21 @@ ptr4 (zeropage.o):
     lshelp.o                  runtime/lshelp.s:12
     lmul.o                    runtime/lmul.s:10
 push0 (pushax.o):
-    main.o                    main.s:1054
+    main.o                    main.s:1053
 pusha (pusha.o):
     timer.o                   timer.s:93
     sprite.o                  sprite.s:497
     sprite.o                  sprite.s:497
-    main.o                    main.s:1054
-    main.o                    main.s:1054
-    main.o                    main.s:1054
-    main.o                    main.s:1054
-    main.o                    main.s:1054
-    main.o                    main.s:1054
-    main.o                    main.s:1054
+    main.o                    main.s:1053
+    main.o                    main.s:1053
+    main.o                    main.s:1053
+    main.o                    main.s:1053
+    main.o                    main.s:1053
+    main.o                    main.s:1053
+    main.o                    main.s:1053
 pusha0 (pushax.o):
-    main.o                    main.s:1054
-    main.o                    main.s:1054
+    main.o                    main.s:1053
+    main.o                    main.s:1053
 pushax (pushax.o):
     callmain.o                runtime/callmain.s:11
     pushw.o                   runtime/pushw.s:8
@@ -690,32 +690,32 @@ pushax (pushax.o):
     sprite.o                  sprite.s:497
     sprite.o                  sprite.s:497
     sprite.o                  sprite.s:497
-    main.o                    main.s:1054
-    main.o                    main.s:1054
-    main.o                    main.s:1054
-    main.o                    main.s:1054
-    main.o                    main.s:1054
-    main.o                    main.s:1054
+    main.o                    main.s:1053
+    main.o                    main.s:1053
+    main.o                    main.s:1053
+    main.o                    main.s:1053
+    main.o                    main.s:1053
+    main.o                    main.s:1053
 pusheax (lpush.o):
     mktime.o                  ../libwrk/cx16/mktime.s:614
     gettime.o                 cx16/gettime.s:10
     timer.o                   timer.s:93
     timer.o                   timer.s:93
 pushw (pushw.o):
-    main.o                    main.s:1054
-    main.o                    main.s:1054
+    main.o                    main.s:1053
+    main.o                    main.s:1053
 pushw0sp (pushwsp.o):
     mktime.o                  ../libwrk/cx16/mktime.s:614
-    main.o                    main.s:1054
-    main.o                    main.s:1054
-    main.o                    main.s:1054
+    main.o                    main.s:1053
+    main.o                    main.s:1053
+    main.o                    main.s:1053
 pushwidx (pushw.o):
-    main.o                    main.s:1054
-    main.o                    main.s:1054
+    main.o                    main.s:1053
+    main.o                    main.s:1053
 pushwysp (pushwsp.o):
-    main.o                    main.s:1054
-    main.o                    main.s:1054
-    main.o                    main.s:1054
+    main.o                    main.s:1053
+    main.o                    main.s:1053
+    main.o                    main.s:1053
 regbank (zeropage.o):
     regswap2.o                runtime/regswap2.s:8
     mktime.o                  ../libwrk/cx16/mktime.s:10
@@ -785,15 +785,15 @@ sreg (zeropage.o):
     sprite.o                  sprite.s:10
     main.o                    main.s:10
 staspidx (staspidx.o):
-    main.o                    main.s:1054
+    main.o                    main.s:1053
 stax0sp (staxsp.o):
     mktime.o                  ../libwrk/cx16/mktime.s:614
 staxspidx (staxspi.o):
     mktime.o                  ../libwrk/cx16/mktime.s:614
-    main.o                    main.s:1054
-    main.o                    main.s:1054
-    main.o                    main.s:1054
-    main.o                    main.s:1054
+    main.o                    main.s:1053
+    main.o                    main.s:1053
+    main.o                    main.s:1053
+    main.o                    main.s:1053
 staxysp (staxsp.o):
     mktime.o                  ../libwrk/cx16/mktime.s:614
 steaxspidx (steaxspi.o):
@@ -838,14 +838,14 @@ tmp4 (zeropage.o):
     ludiv.o                   runtime/ludiv.s:10
     lmul.o                    runtime/lmul.s:10
 tosaddax (add.o):
-    main.o                    main.s:1054
-    main.o                    main.s:1054
+    main.o                    main.s:1053
+    main.o                    main.s:1053
 tosaddeax (ladd.o):
     mktime.o                  ../libwrk/cx16/mktime.s:614
     timer.o                   timer.s:93
 tosdiva0 (div.o):
-    main.o                    main.s:1054
-    main.o                    main.s:1054
+    main.o                    main.s:1053
+    main.o                    main.s:1053
 tosdivax (div.o):
     divt.o                    common/divt.s:17
 tosdiveax (ldiv.o):
@@ -857,10 +857,10 @@ toslcmp (lcmp.o):
 tosmul0ax (lmul.o):
     gettime.o                 cx16/gettime.s:10
 tosmula0 (mul8.o):
-    main.o                    main.s:1054
-    main.o                    main.s:1054
+    main.o                    main.s:1053
+    main.o                    main.s:1053
 tossubax (sub.o):
-    main.o                    main.s:1054
+    main.o                    main.s:1053
 tossubeax (lsub.o):
     mktime.o                  ../libwrk/cx16/mktime.s:614
 tosulteax (lult.o):
