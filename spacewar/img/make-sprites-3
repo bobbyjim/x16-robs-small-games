@@ -1,0 +1,1 @@
+perl c3bin.pl TEMP-SPRITES.BIN star.png asteroid.png ship1-00.png ship1-15.png ship1-30.png ship1-45.png ship1-60.png ship1-75.png ship1-90.png ship2-00.png ship2-15.png ship2-30.png ship2-45.png ship2-60.png ship2-75.png ship2-90.png 

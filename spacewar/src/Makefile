@@ -1,4 +1,4 @@
-SOURCES = main.c sprite.c PSG.c timer.c
+SOURCES = main.c sprite.c timer.c
 
 PROGRAM = SPACEWAR
 
