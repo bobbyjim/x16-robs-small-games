@@ -1,4 +1,4 @@
-
+#include <6502.h>
 #include <cbm.h>
 
 #include "map.h"
@@ -7,11 +7,17 @@
 
 byte x, y;
 
+void set_PET_font()
+{
+   struct regs fontregs;
+   fontregs.a = 4; // PET-like
+   fontregs.pc = 0xff62;
+   _sys(&fontregs);
+}
+
 void main()
 {
-   cbm_k_setnam("petfont.bin");
-   cbm_k_setlfs(0,8,0);
-   cbm_k_load(2, 0x0f800);
+   set_PET_font();
 
    login("spelunk", "22-03-04");
    map_create();

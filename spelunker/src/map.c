@@ -33,7 +33,7 @@ void map_create()
    int i, j;
    _randomize();
 
-   cputs("warning!  not r39 safe!\r\n\r\n");
+   cputs("warning!  not r39+ safe!\r\n\r\n");
    RAM_BANK = 1;            // r38 !!!!
    for(j=1; j<ROWS-1; ++j)
    {

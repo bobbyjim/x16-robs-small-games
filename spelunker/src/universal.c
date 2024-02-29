@@ -63,11 +63,11 @@ void login(char *name, char *date)
    gotoxy(2,18);
    cprintf("                        commander x16 | %s", date);
 
-   //textcolor(10);
-   //cputsxy(2,25,"                    * * *   press a key to login   * * * ");
-   //cgetc();
-   //cclearxy(2,25,70);
-   //textcolor(5);
+   textcolor(10);
+   cputsxy(2,25,"                    * * *   press a key to login   * * * ");
+   cgetc();
+   cclearxy(2,25,70);
+   textcolor(5);
 
    gotoxy(0,20);
 }
