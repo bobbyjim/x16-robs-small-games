@@ -109,7 +109,7 @@ void gravity(uint8_t spritenum, SpriteDefinition *obj)
    //
    // flip the sprite if necessary
    //
-   if (spritenum != SHIP_1_SPRITE)
+   if (spritenum != SHIP_1_SPRITE && spritenum != SHIP_2_SPRITE)
    {
       obj->flip_horiz = (obj->dx < 0);
       obj->flip_vert  = (obj->dy > 0);
@@ -121,7 +121,7 @@ void move_asteroid()
    gravity(3, &asteroid_def);
 }
 
-int ship_theta[2] = { 0, 120 };
+int ship_theta[2] = { 0, 0 };
 
 unsigned rotation_addr[2][25] = {
    { 
