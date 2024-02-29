@@ -26,8 +26,8 @@ longvar \int       c5
 
 longvar \tempmessage t0
 
-longvar inventory_weapons%(10)
-longvar inventory_armor%(10)
+longvar \inventory_weapons%(10)
+longvar \inventory_armor%(10)
 
 gosub {:initialize}  :rem init game
 gosub {:sound-init}  :rem init sound

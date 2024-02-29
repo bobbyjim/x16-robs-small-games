@@ -19,7 +19,7 @@ longvar \panel.left		p2
 longvar \panel.width		p3
 longvar \panel.height		p4
 longvar \panel.line 		p5
-longvar \panel.lineSelected	p6
+longvar \panel.selected	p6
 longvar \panel.count		p7
 
 {:panels.init}
@@ -31,7 +31,7 @@ n = 6
 \panel.count = 0
 dim \panel.label$(n)
 dim \panel.top(n), \panel.left(n), \panel.width(n), \panel.height(n)
-dim \panel.line$(n,30), \panel.lineSelected(n)
+dim \panel.line$(n,30), \panel.selected(n)
 
 rem  -----------------------------------
 rem  horizontal bar array
@@ -121,7 +121,7 @@ n = \panel.count
 \panel.left(n) = l
 \panel.width(n) = w
 \panel.height(n) = h
-\panel.lineSelected(n) = -1
+\panel.selected(n) = -1
 \panel.count = n + 1
 return
 
