@@ -3,11 +3,13 @@
 
 #include "sprite.h"
 
+#define  HIGH_BYTE_SHIFT      (SPRITE_POSITION_FRACTIONAL_BITS+8)
+
 // x and y are 15 bit uint's so we can toy with them just a bit.
-#define     SPRITE_XH(x)             ((x>>5) & 0xff)
-#define     SPRITE_XL(x)             (x>>13)
-#define     SPRITE_YH(y)             ((y>>5) & 0xff)
-#define     SPRITE_YL(y)             (y>>13)
+#define     SPRITE_XH(x)             ((x>>SPRITE_POSITION_FRACTIONAL_BITS) & 0xff)
+#define     SPRITE_XL(x)             (x>>HIGH_BYTE_SHIFT)
+#define     SPRITE_YH(y)             ((y>>SPRITE_POSITION_FRACTIONAL_BITS) & 0xff)
+#define     SPRITE_YL(y)             (y>>HIGH_BYTE_SHIFT)
 
 void sprite_loadToVERA(char *filename, uint16_t address)
 {

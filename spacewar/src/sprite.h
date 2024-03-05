@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define		SPRITE_POSITION_FRACTIONAL_BITS		5
+
 #define		SPRITE_MODE_8BPP			128
 #define		SPRITE_MODE_4BPP			0
 
@@ -38,8 +40,9 @@
 
 #define	    SPRITE_SET_IMAGE	        0xFEF0
 #define     SPRITE_MOVE		            0xFEF3
-#define     SPRITE_X_SCALE(x)           (x<<5)
-#define     SPRITE_Y_SCALE(y)           (y<<5)
+
+#define     SPRITE_X_SCALE(x)           (x<<SPRITE_POSITION_FRACTIONAL_BITS)
+#define     SPRITE_Y_SCALE(y)           (y<<SPRITE_POSITION_FRACTIONAL_BITS)
 
 #define		VERA_SPRITE_AREA_BOTTOM		0x4000
 #define		VERA_SPRITE_AREA_TOP		0xcfff
@@ -55,7 +58,7 @@
 //
 //  A note on positions:
 //  15 bits is an abuse, unless you use it fractionally.
-//  Let's shift it by 5 bits before using it.
+//  Shifting it by 6 bits before using it gives you 6 fractional bits.
 //
 typedef struct {
 	uint16_t block; 
