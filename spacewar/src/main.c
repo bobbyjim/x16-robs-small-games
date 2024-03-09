@@ -37,15 +37,21 @@
 #define  SHIP2_ADDR_75            0x7200
 #define  SHIP2_ADDR_90            0x7600
 
+#define  MISSILE_ADDR_1           0x7a00
+
 #define  STAR_X                  312
-#define  STAR_Y                  200
+#define  STAR_Y                  240
 
 #define  STAR_SPRITE             0
 #define  SHIP_1_SPRITE           1
 #define  SHIP_2_SPRITE           2
-#define  ASTEROID_SPRITE         3
+#define  MISSILE_1_SPRITE        3
+#define  MISSILE_2_SPRITE        4
+#define  ASTEROID_SPRITE         10
 
-SpriteDefinition star_def, asteroid_def, ship_def[2];
+#define  NUM_OF_ASTEROIDS        1
+
+SpriteDefinition star_def, asteroid_def[NUM_OF_ASTEROIDS], ship_def[2], missile_def[2];
 unsigned wait;
 
 
@@ -70,19 +76,35 @@ void initSprite(SpriteDefinition *sprdef, unsigned char dimensions, unsigned int
 
 void initSprites()
 {
-   initSprite(&ship_def[0], SPRITE_32_BY_32, SHIP1_ADDR_0, 100, 200);
+   int i;
+   int shipSize = SPRITE_32_BY_32;
+
+   initSprite(&ship_def[0], shipSize, SHIP1_ADDR_0, 100, 200);
    sprite_define(SHIP_1_SPRITE, &ship_def[0]);
 
-   initSprite(&ship_def[1], SPRITE_32_BY_32, SHIP2_ADDR_0, 400, 100);
+   initSprite(&ship_def[1], shipSize, SHIP2_ADDR_0, 400, 100);
    sprite_define(SHIP_2_SPRITE, &ship_def[1]);
 
    initSprite(&star_def, SPRITE_16_BY_16, STAR_ADDR, STAR_X, STAR_Y );
    sprite_define(STAR_SPRITE, &star_def);
    
-   initSprite(&asteroid_def, SPRITE_16_BY_16, ASTEROID_ADDR, 50, 50 );
-   asteroid_def.dx          = 500;
-   asteroid_def.dy          = -200;
-   sprite_define(ASTEROID_SPRITE, &asteroid_def);
+   for (i=0; i<NUM_OF_ASTEROIDS; ++i)
+   {
+      initSprite(&asteroid_def[i], SPRITE_16_BY_16, ASTEROID_ADDR, rand() % 450, rand() % 450 );
+      asteroid_def[i].dx          = 500;
+      asteroid_def[i].dy          = -200;
+      sprite_define(ASTEROID_SPRITE+i, &asteroid_def[i]);
+   }
+
+   initSprite(&missile_def[0], SPRITE_8_BY_8, MISSILE_ADDR_1, 100, 100 );
+   missile_def[0].dx  = 800;
+   missile_def[0].dy  = 800;
+   sprite_define(MISSILE_1_SPRITE, &missile_def[0]);
+
+   initSprite(&missile_def[1], SPRITE_8_BY_8, MISSILE_ADDR_1, 200, 300 );
+   missile_def[1].dx  = -800;
+   missile_def[1].dy  = -800;
+   sprite_define(MISSILE_2_SPRITE, &missile_def[1]);
 }
 
 int x_delta, y_delta;
@@ -90,7 +112,7 @@ int x_delta, y_delta;
 #define  X_GRADIENT     ((int*)(0x8000))
 #define  Y_GRADIENT     ((int*)(0x9000))
 
-void gravity(uint8_t spritenum, SpriteDefinition *obj)
+void move_missile(uint8_t spritenum, SpriteDefinition *obj)
 {
    int *x = X_GRADIENT;
    int *y = Y_GRADIENT; 
@@ -113,13 +135,54 @@ void gravity(uint8_t spritenum, SpriteDefinition *obj)
    
       obj->dx += i;
       obj->dy += j;
-      //if (obj->dx < 16) obj->dx = abs(obj->dx);
-      //if (obj->dy < 16) obj->dy = abs(obj->dy);
+      if (obj->x < SPRITE_X_SCALE(8)) obj->x = SPRITE_X_SCALE(800);
+      if (obj->y < SPRITE_Y_SCALE(8)) obj->y = SPRITE_Y_SCALE(800);
    }
    else
    {
-      //if (obj->dx > SPRITE_X_SCALE(600)) obj->dx = -abs(obj->dx);     
-      //if (obj->dy > SPRITE_Y_SCALE(440)) obj->dy = -abs(obj->dy);
+      if (obj->x > SPRITE_X_SCALE(600)) obj->x = SPRITE_X_SCALE(800);
+      if (obj->y > SPRITE_Y_SCALE(440)) obj->y = SPRITE_Y_SCALE(800);
+   }
+}
+
+void gravity(uint8_t spritenum, SpriteDefinition *obj)
+{
+   int *x = X_GRADIENT;
+   int *y = Y_GRADIENT; 
+   int  col = obj->x >> (SPRITE_POSITION_FRACTIONAL_BITS+4); // 0..39
+   int  row = obj->y >> (SPRITE_POSITION_FRACTIONAL_BITS+4); // 0..29
+   int i, j;
+
+   //
+   //  Impose a maximum delta
+   //
+   if (obj->dx > 2048) obj->dx = 2048;
+   else if (obj->dx < -2048) obj->dx = -2048;
+   if (obj->dy > 2048) obj->dy = 2048;
+   else if (obj->dy < -2048) obj->dy = -2048;
+
+   sprite_pos(spritenum, obj);
+   obj->x += obj->dx >> 4;
+   obj->y += obj->dy >> 4;
+
+   if (col < 39 && row < 29)
+   {
+      //
+      //  Use the gradient maps
+      //
+      RAM_BANK = 1;
+      i = x[row*40+col];
+      j = y[row*40+col];
+   
+      obj->dx += i;
+      obj->dy += j;
+      if (obj->x < SPRITE_X_SCALE(8)) obj->x = SPRITE_X_SCALE(600);
+      if (obj->y < SPRITE_Y_SCALE(8)) obj->y = SPRITE_Y_SCALE(440);
+   }
+   else
+   {
+      if (obj->x > SPRITE_X_SCALE(600)) obj->x = SPRITE_X_SCALE(8);
+      if (obj->y > SPRITE_Y_SCALE(440)) obj->y = SPRITE_Y_SCALE(8);
    }
 
    /*   
@@ -149,9 +212,15 @@ void gravity(uint8_t spritenum, SpriteDefinition *obj)
    }
 }
 
-void move_asteroid()
+void move_the_things()
 {
-   gravity(ASTEROID_SPRITE, &asteroid_def);
+   int i;
+
+   for(i=0; i<NUM_OF_ASTEROIDS; ++i)
+      gravity(ASTEROID_SPRITE+i,   &asteroid_def[i]);
+
+   move_missile(MISSILE_1_SPRITE,  &missile_def[0]);
+   move_missile(MISSILE_2_SPRITE,  &missile_def[1]);
 }
 
 int ship_theta[2] = { 0, 0 };
@@ -275,11 +344,11 @@ void move_ship()
 
 void load_gradients()
 {
-   int i,j;
-   int row, col;
+   //int i,j;
+   //int row, col;
+   //char c;
    int *x = X_GRADIENT;
    int *y = Y_GRADIENT; 
-   char c;
 
    RAM_BANK = 1;
    cbm_k_setnam("gradient-x.bin");
@@ -289,29 +358,28 @@ void load_gradients()
    cbm_k_setlfs(0,8,0);
    cbm_k_load(LOAD_TO_MAIN_RAM, 0x9000); // bank 1, 2nd half
 
-   for(row=0; row<30; ++row)
-   {
-      for(col=0; col<40; ++col)
-      {
-         i = (x[row*40+col]);
-         j = (y[row*40+col]);
-         gotoxy(col,row);
-         if (i >= 0)
-            cputc(48+i);
-         else
-            cputc(64+48+i);
-         
-         gotoxy(col+40,row);
-         if (j >= 0)
-            cputc(48+j);
-         else
-            cputc(64+48+j);
-      }
-   }
-
-   gotoxy(0,40);
-   cprintf("press a key to begin");
-   c = cgetc();
+   //for(row=0; row<30; ++row)
+   //{
+   //   for(col=0; col<40; ++col)
+   //   {
+   //      i = (x[row*40+col]);
+   //      j = (y[row*40+col]);
+   //      gotoxy(col,row);
+   //      if (i >= 0)
+   //         cputc(48+i);
+   //      else
+   //         cputc(64+48+i);
+   //      
+   //      gotoxy(col+40,row);
+   //      if (j >= 0)
+   //         cputc(48+j);
+   //      else
+   //         cputc(64+48+j);
+   //   }
+   //}
+   //gotoxy(0,40);
+   //cprintf("press a key to begin");
+   //c = cgetc();
 }
 
 void main()
@@ -321,7 +389,7 @@ void main()
    cbm_k_bsout(CH_FONT_UPPER); // cbm.h
 
    // load sprites to vera
-   cbm_k_setnam("temp-sprites.bin");
+   cbm_k_setnam("sw-sprites.bin");
    cbm_k_setlfs(0,8,0);
    cbm_k_load(LOAD_TO_VERA, SPRITE_ADDR_BEGIN);
 
@@ -336,7 +404,7 @@ void main()
    while(!done)
    {
       move_ship();
-      move_asteroid();
+      move_the_things();
       pause_jiffies(2000);
    }
 }

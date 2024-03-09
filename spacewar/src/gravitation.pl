@@ -11,13 +11,13 @@ for my $row (0..29)
 	for my $col (0..39)
 	{
 		# translate to cx,cy
-		my $y = 15-$row;              # cy centered
-		my $x = 20-$col;              # cx centered
+		my $y = 15-$row;                # cy centered
+		my $x = 20-$col;                # cx centered
 		my $r2 = ($x * $x + $y * $y);   # radius squared (up to something like 625)
 		$r2 = 1 if $r2 == 0;
 		my $h  = sqrt($r2);             # radius/hypoteneuse
-		my $mass = 640;                 # mass of the sun
-		my $g = $mass / $r2;            # gravity
+		my $mass = 300;                 # mass of the sun
+		my $g = 2 * $mass / $r2;            # gravity
 
 		my $dy = int($g*$y/$h);
 		my $dx = int($g*$x/$h);
