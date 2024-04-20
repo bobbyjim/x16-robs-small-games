@@ -138,33 +138,46 @@ void initSprites()
       sprite_define(ASTEROID_SPRITE+i, &asteroid_def[i]);
    }
 
-   initSprite(&missile_def[0], SPRITE_8_BY_8, MISSILE_ADDR_1, 100, 100 );
-   missile_def[0].dx  = 800;
-   missile_def[0].dy  = 800;
+   initSprite(&missile_def[0], SPRITE_8_BY_8, MISSILE_ADDR_1, 0, 0 );
+   //missile_def[0].dx  = 800;
+   //missile_def[0].dy  = 800;
    sprite_define(MISSILE_1_SPRITE, &missile_def[0]);
+   missile_def[0].layer = SPRITE_DISABLED;
 
-   initSprite(&missile_def[1], SPRITE_8_BY_8, MISSILE_ADDR_1, 200, 300 );
-   missile_def[1].dx  = -800;
-   missile_def[1].dy  = -800;
+   initSprite(&missile_def[1], SPRITE_8_BY_8, MISSILE_ADDR_1, 0, 0 );
+   //missile_def[1].dx  = -800;
+   //missile_def[1].dy  = -800;
    sprite_define(MISSILE_2_SPRITE, &missile_def[1]);
+   missile_def[1].layer = SPRITE_DISABLED;
 }
 
 void move_missile(uint8_t spritenum, SpriteDefinition *obj)
 {
    int *x = X_GRADIENT;
    int *y = Y_GRADIENT; 
-   int  col = obj->x >> (SPRITE_POSITION_FRACTIONAL_BITS+4); // 0..39
-   int  row = obj->y >> (SPRITE_POSITION_FRACTIONAL_BITS+4); // 0..29
-   int i, j;
+   int  col;
+   int  row;
+   //int i, j;
 
    if (obj->layer == SPRITE_DISABLED) return; // not active
+
+   col = obj->x >> (SPRITE_POSITION_FRACTIONAL_BITS+4); // 0..39
+   row = obj->y >> (SPRITE_POSITION_FRACTIONAL_BITS+4); // 0..29
 
    sprite_pos(spritenum, obj);
    obj->x += obj->dx >> 4;
    obj->y += obj->dy >> 4;
 
-   if (col < 39 && row < 29)
+   if (col == 0 || row == 0 || col == 39 || row == 29)
    {
+      obj->layer = SPRITE_DISABLED;
+      obj->x = 0;
+      obj->y = 0;
+      sprite_pos(spritenum, obj);
+   }
+
+   //if (col < 39 && row < 29)
+   //{
       //
       //  Use the gradient maps
       //
@@ -174,14 +187,14 @@ void move_missile(uint8_t spritenum, SpriteDefinition *obj)
    //
       //obj->dx += i;
       //obj->dy += j;
-      if (obj->x < SPRITE_X_SCALE(2)) obj->layer = SPRITE_DISABLED; // obj->x = SPRITE_X_SCALE(800);
-      if (obj->y < SPRITE_Y_SCALE(2)) obj->layer = SPRITE_DISABLED; // obj->y = SPRITE_Y_SCALE(800);
-   }
-   else
-   {
-      if (obj->x > SPRITE_X_SCALE(600)) obj->layer = SPRITE_DISABLED; // obj->x = SPRITE_X_SCALE(800);
-      if (obj->y > SPRITE_Y_SCALE(440)) obj->layer = SPRITE_DISABLED; // obj->y = SPRITE_Y_SCALE(800);
-   }
+      //if (obj->x < SPRITE_X_SCALE(2)) obj->x = SPRITE_X_SCALE(800);
+      //if (obj->y < SPRITE_Y_SCALE(2)) obj->y = SPRITE_Y_SCALE(800);
+   //}
+   //else
+   //{
+   //   if (obj->x > SPRITE_X_SCALE(630)) obj->x = SPRITE_X_SCALE(800);
+   //   if (obj->y > SPRITE_Y_SCALE(470)) obj->y = SPRITE_Y_SCALE(800);
+   //}
 }
 
 void gravity(uint8_t spritenum, SpriteDefinition *obj)
@@ -266,8 +279,9 @@ void fire_missile(unsigned char missileNum, unsigned char shipNum)
 {
    SpriteDefinition* ship = &ship_def[shipNum];
    SpriteDefinition* missile = &missile_def[missileNum];
-
    int theta = ship_theta[shipNum];
+
+   if (missile->layer != SPRITE_DISABLED) return;
 
    missile->x  = ship->x + 400;
    missile->y  = ship->y + 400;
