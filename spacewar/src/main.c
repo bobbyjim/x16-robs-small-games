@@ -15,6 +15,8 @@
 
 #define  SHIP_1                  0
 #define  SHIP_2                  1
+#define  MISSILE_1               0
+#define  MISSILE_2               1
 
 #define  SPRITE_ADDR_BEGIN       0x4000
 // 8bpp 16x16
@@ -54,6 +56,46 @@
 SpriteDefinition star_def, asteroid_def[NUM_OF_ASTEROIDS], ship_def[2], missile_def[2];
 unsigned wait;
 
+
+int ship_theta[2] = { 0, 0 };
+
+unsigned rotation_addr[2][25] = {
+   { 
+   SHIP1_ADDR_0,  SHIP1_ADDR_15, SHIP1_ADDR_30, SHIP1_ADDR_45, SHIP1_ADDR_60, SHIP1_ADDR_75, 
+   SHIP1_ADDR_90, SHIP1_ADDR_75, SHIP1_ADDR_60, SHIP1_ADDR_45, SHIP1_ADDR_30, SHIP1_ADDR_15, 
+   SHIP1_ADDR_0,  SHIP1_ADDR_15, SHIP1_ADDR_30, SHIP1_ADDR_45, SHIP1_ADDR_60, SHIP1_ADDR_75, 
+   SHIP1_ADDR_90, SHIP1_ADDR_75, SHIP1_ADDR_60, SHIP1_ADDR_45, SHIP1_ADDR_30, SHIP1_ADDR_15,
+   SHIP1_ADDR_0 
+   },
+   {
+   SHIP2_ADDR_0,  SHIP2_ADDR_15, SHIP2_ADDR_30, SHIP2_ADDR_45, SHIP2_ADDR_60, SHIP2_ADDR_75, 
+   SHIP2_ADDR_90, SHIP2_ADDR_75, SHIP2_ADDR_60, SHIP2_ADDR_45, SHIP2_ADDR_30, SHIP2_ADDR_15, 
+   SHIP2_ADDR_0,  SHIP2_ADDR_15, SHIP2_ADDR_30, SHIP2_ADDR_45, SHIP2_ADDR_60, SHIP2_ADDR_75, 
+   SHIP2_ADDR_90, SHIP2_ADDR_75, SHIP2_ADDR_60, SHIP2_ADDR_45, SHIP2_ADDR_30, SHIP2_ADDR_15,
+   SHIP2_ADDR_0
+   }
+};
+
+int rotation_vector_x[] = {
+   0,  8,  15, 22, 27, 30, 
+   31, 30, 27, 22, 16, 8, 
+   0,  -8,  -15, -22, -27, -30, 
+   -31, -30, -27, -22, -16, -8, 
+   0
+};
+
+int rotation_vector_y[] = {
+   -32, -30, -27, -22, -16, -8, 
+   0,  8,  15,  22,  27,  30,
+   32, 30, 27, 22, 16, 8, 
+   0, -8, -15, -22, -27, -30, 
+   -32
+};
+
+int x_delta, y_delta;
+
+#define  X_GRADIENT     ((int*)(0x8000))
+#define  Y_GRADIENT     ((int*)(0x9000))
 
 void loadFile(char *fname, unsigned address)
 {
@@ -107,11 +149,6 @@ void initSprites()
    sprite_define(MISSILE_2_SPRITE, &missile_def[1]);
 }
 
-int x_delta, y_delta;
-
-#define  X_GRADIENT     ((int*)(0x8000))
-#define  Y_GRADIENT     ((int*)(0x9000))
-
 void move_missile(uint8_t spritenum, SpriteDefinition *obj)
 {
    int *x = X_GRADIENT;
@@ -119,6 +156,8 @@ void move_missile(uint8_t spritenum, SpriteDefinition *obj)
    int  col = obj->x >> (SPRITE_POSITION_FRACTIONAL_BITS+4); // 0..39
    int  row = obj->y >> (SPRITE_POSITION_FRACTIONAL_BITS+4); // 0..29
    int i, j;
+
+   if (obj->layer == SPRITE_DISABLED) return; // not active
 
    sprite_pos(spritenum, obj);
    obj->x += obj->dx >> 4;
@@ -129,19 +168,19 @@ void move_missile(uint8_t spritenum, SpriteDefinition *obj)
       //
       //  Use the gradient maps
       //
-      RAM_BANK = 1;
-      i = x[row*40+col];
-      j = y[row*40+col];
-   
-      obj->dx += i;
-      obj->dy += j;
-      if (obj->x < SPRITE_X_SCALE(8)) obj->x = SPRITE_X_SCALE(800);
-      if (obj->y < SPRITE_Y_SCALE(8)) obj->y = SPRITE_Y_SCALE(800);
+      //RAM_BANK = 1;
+      //i = x[row*40+col];
+      //j = y[row*40+col];
+   //
+      //obj->dx += i;
+      //obj->dy += j;
+      if (obj->x < SPRITE_X_SCALE(2)) obj->layer = SPRITE_DISABLED; // obj->x = SPRITE_X_SCALE(800);
+      if (obj->y < SPRITE_Y_SCALE(2)) obj->layer = SPRITE_DISABLED; // obj->y = SPRITE_Y_SCALE(800);
    }
    else
    {
-      if (obj->x > SPRITE_X_SCALE(600)) obj->x = SPRITE_X_SCALE(800);
-      if (obj->y > SPRITE_Y_SCALE(440)) obj->y = SPRITE_Y_SCALE(800);
+      if (obj->x > SPRITE_X_SCALE(600)) obj->layer = SPRITE_DISABLED; // obj->x = SPRITE_X_SCALE(800);
+      if (obj->y > SPRITE_Y_SCALE(440)) obj->layer = SPRITE_DISABLED; // obj->y = SPRITE_Y_SCALE(800);
    }
 }
 
@@ -223,40 +262,19 @@ void move_the_things()
    move_missile(MISSILE_2_SPRITE,  &missile_def[1]);
 }
 
-int ship_theta[2] = { 0, 0 };
+void fire_missile(unsigned char missileNum, unsigned char shipNum)
+{
+   SpriteDefinition* ship = &ship_def[shipNum];
+   SpriteDefinition* missile = &missile_def[missileNum];
 
-unsigned rotation_addr[2][25] = {
-   { 
-   SHIP1_ADDR_0,  SHIP1_ADDR_15, SHIP1_ADDR_30, SHIP1_ADDR_45, SHIP1_ADDR_60, SHIP1_ADDR_75, 
-   SHIP1_ADDR_90, SHIP1_ADDR_75, SHIP1_ADDR_60, SHIP1_ADDR_45, SHIP1_ADDR_30, SHIP1_ADDR_15, 
-   SHIP1_ADDR_0,  SHIP1_ADDR_15, SHIP1_ADDR_30, SHIP1_ADDR_45, SHIP1_ADDR_60, SHIP1_ADDR_75, 
-   SHIP1_ADDR_90, SHIP1_ADDR_75, SHIP1_ADDR_60, SHIP1_ADDR_45, SHIP1_ADDR_30, SHIP1_ADDR_15,
-   SHIP1_ADDR_0 
-   },
-   {
-   SHIP2_ADDR_0,  SHIP2_ADDR_15, SHIP2_ADDR_30, SHIP2_ADDR_45, SHIP2_ADDR_60, SHIP2_ADDR_75, 
-   SHIP2_ADDR_90, SHIP2_ADDR_75, SHIP2_ADDR_60, SHIP2_ADDR_45, SHIP2_ADDR_30, SHIP2_ADDR_15, 
-   SHIP2_ADDR_0,  SHIP2_ADDR_15, SHIP2_ADDR_30, SHIP2_ADDR_45, SHIP2_ADDR_60, SHIP2_ADDR_75, 
-   SHIP2_ADDR_90, SHIP2_ADDR_75, SHIP2_ADDR_60, SHIP2_ADDR_45, SHIP2_ADDR_30, SHIP2_ADDR_15,
-   SHIP2_ADDR_0
-   }
-};
+   int theta = ship_theta[shipNum];
 
-int rotation_vector_x[] = {
-   0,  8,  15, 22, 27, 30, 
-   31, 30, 27, 22, 16, 8, 
-   0,  -8,  -15, -22, -27, -30, 
-   -31, -30, -27, -22, -16, -8, 
-   0
-};
-
-int rotation_vector_y[] = {
-   -32, -30, -27, -22, -16, -8, 
-   0,  8,  15,  22,  27,  30,
-   32, 30, 27, 22, 16, 8, 
-   0, -8, -15, -22, -27, -30, 
-   -32
-};
+   missile->x  = ship->x + 400;
+   missile->y  = ship->y + 400;
+   missile->dx = (rotation_vector_x[ theta/10 ] << 6);
+   missile->dy = (rotation_vector_y[ theta/10 ] << 6);
+   missile->layer = SPRITE_LAYER_0; // activated
+}
 
 void ship_accelerate(int shipnum)
 {
@@ -312,29 +330,15 @@ void move_ship()
    {
       switch(cgetc())
       {
-         case 'a':
-            ship_update(SHIP_1,SHIP_1_SPRITE,-10);
-            break;
+         case 'a': ship_update(SHIP_1,SHIP_1_SPRITE,-10); break;
+         case 'd': ship_update(SHIP_1,SHIP_1_SPRITE,10);  break;
+         case 's': ship_accelerate(SHIP_1); break;
+         case 'w': fire_missile(MISSILE_1, SHIP_1); break;
 
-         case 'd':
-            ship_update(SHIP_1,SHIP_1_SPRITE,10);
-            break;
-
-         case 's':
-            ship_accelerate(SHIP_1);
-            break;
-
-         case 'j':
-            ship_update(SHIP_2,SHIP_2_SPRITE,-10);
-            break;
-
-         case 'l':
-            ship_update(SHIP_2,SHIP_2_SPRITE,10);
-            break;
-
-         case 'k':
-            ship_accelerate(SHIP_2);
-            break;
+         case 'j': ship_update(SHIP_2,SHIP_2_SPRITE,-10); break;
+         case 'l': ship_update(SHIP_2,SHIP_2_SPRITE,10);  break;
+         case 'k': ship_accelerate(SHIP_2); break;
+         case 'i': fire_missile(MISSILE_2, SHIP_2); break;
       }
    }
 
