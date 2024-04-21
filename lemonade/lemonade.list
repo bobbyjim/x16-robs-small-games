@@ -1,11 +1,5 @@
-rem lemonade stand for x16, edit 2021 robert eaglestone
+rem lemonade stand for x16, edit 2024 robert eaglestone
 rem boring notes at the end of this listing
-
-rem
-rem to use the pet font:
-rem
-VLOAD "PETFONT.BIN",8,1,0
-POKE $9F36,128
 
 longvar \down
 
@@ -22,10 +16,12 @@ rem
 rem ------------------------------------
 {:title page}
 
-screen 0  :rem x16 40x25 mode
-color 5,0 :rem x16 green-on-black
-cls()
+POKE $030C, 4 :rem .a=4
+SYS $FF62 :rem pet font
+screen 3  :rem x16 40x25 mode
+cls
 
+color 5,0 :rem green-on-black
 PRINT"\X93\X11\X1D";
 FORI=1TO38:PRINT"\X12Š\X92";:NEXT
 FORI=1TO27:PRINT"\X11\X9D\X12Š\X92";:NEXT
@@ -76,9 +72,11 @@ a1=0  :rem starting sugar
 p1=0  :rem starting cups
 x=1
 
-?:?" " n$", you shall operate your"
-?:?" stand for"wk"weeks."
+?:?" " n$", you shall operate your stand for"
+?:?"              "wk"weeks."
 gosub {:press spacebar} :rem spacebar
+color 5,0 :rem green-on-black
+
 rem ------------------------------------
 rem
 rem
@@ -351,7 +349,7 @@ rem  end / summary
 rem
 rem 
 rem ------------------------------------
-cls()
+cls
 ? "{rvon}summer's end{rvof}"
 ?:? " the summer is over."
 ?:? " you have $"b"."
@@ -517,42 +515,34 @@ rem
 rem
 rem ------------------------------------
 {:intro}
-cls();
+color 8,0 :rem amber-on-black
+cls
 ? chr$(14);
-;? " {rvon}Ìemonade Stand{rvof}"
-? " {rvon}Lemonade Stand{rvof}"
+? " {rvon}Ìemonade Ótand{rvof}"
 ?
-;? " Ùou've decided to run a lemonade stand"
-? " You've decided to run a lemonade stand"
-? " for 12 saturdays this summer in order "
-? " to make some money. Âut you soon find "
-? " that running a stand costs money."
-;? " Ùour job is to make as big a profit as"
-? " Your job is to make as big a profit as"
-? " you can."
+? " Ùou've decided to run a lemonade stand
+? " for 12 saturdays this summer, in order 
+? " to make some money - but you soon find 
+? " that running a stand costs money. Ùour
+? " task is to make as big a profit as you
+? " can.
 ?
-;? " Ùour family agrees to stake you $10 in"
-? " Your family agrees to stake you $10 in"
-;? " order to get started. Át the end of "
-? " order to get started. At the end of "
-? " the summer you will have to return the"
-? " $10, but you will not need to pay"
-? " interest."
+? " Ùour family agrees to stake you $10 to
+? " get started.  Át the end of the summer
+? " you will have to return the $10, but 
+? " you will not need to pay interest.
 ?
-;? " Éf you keep your price low, you'll sell";
-? " If you keep your price low, you'll sell";
-? " more lemonade, but will make less money";
-? " on each sale."
-;? " Ïn hot or humid days, you will sell"
-? " On hot or humid days, you will sell"
-? " more lemonade and also be able to"
-? " charge more per cup."
-;? " ×hen the wet bulb reading is close to"
-? " When the wet bulb reading is close to"
-? " the temperature, it is a humid day."
+? " Éf you keep the price low, you'll sell
+? " more lemonade,  but will make less per 
+? " sale.  Ïn hot or humid days,  you will
+? " sell more lemonade and can charge more
+? " per cup.
+?
+? " ×hen the wet bulb reading is close to
+? " the temperature, it is a humid day.
 gosub {:short wait} :rem wait
 gosub {:press spacebar} :rem spacebar
-cls():? chr$(142)
+cls:? chr$(142)
 return
 
 "-----------------------------------------------------
@@ -568,7 +558,8 @@ return
 "imperial units, and a green-on-black display.
 :
 "there are a very few X16-specific commands used:
-"'color' and 'screen' to be exact.
+"'color', 'screen', 'clr', plus a poke to use the PET
+"style font."
 :
 "what is unchanged are the algorithms used to 
 "calculate the prices, temperatures, and demand --

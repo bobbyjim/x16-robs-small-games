@@ -34,5 +34,5 @@ A re-creation of the old Vectrex game. I'm slowly making progress with it.
 A cavern-exploration game using PETSCII. I haven't gotten far with it yet.
 
 # Sumer
-A re-creation of HAMMURABI. It's not complete, and I haven't worked on it for awhile
-(BASIC isn't my favorite language).
+A re-creation of the old HMRABI teletype game. It's not complete, and I haven't worked on it 
+for awhile.

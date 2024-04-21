@@ -1,0 +1,4 @@
+cat lemonade.list module*list > lemonade.tmp
+perl ../../module-basic/basic-labelmaster.pl lemonade.tmp > lemonade.bas
+rm lemonade.tmp
+echo "lemonade.bas created"
