@@ -1,7 +1,8 @@
 rem -----------------------------------------------------
 rem
-rem   sumer - a hmrabi / sumer game from scratch
-rem   rje 2021 (adapted from my 1983-ish version)
+rem   sumer - a city-state-sim game from scratch.
+rem   rje 2021 (adapted from my 1983-ish version, 
+rem   which was in turn adapted from HAMMURABI.
 rem
 rem -----------------------------------------------------
 dim dn$(59),cl$(59)
@@ -20,8 +21,9 @@ as$="accursed sea peoples"
 
 rem emulate amber PETlike terminal
 color 8,0  
-VLOAD "PETFONT.BIN",8,1,0 
-POKE $9F36,128
+POKE $030C, 4 :rem .a=4
+SYS $FF62 :rem pet font
+cls
 
 rem --------------------------------------------------
 rem  title screen
@@ -152,7 +154,7 @@ read a$
 if a$ <> "" goto {:instruction loop}
 
 data "the year is 3500 BC.  you are the ruler of the ancient state of"
-data "sumer. you have ten years to run your empire."
+data "sumer. you have twelve years to run your empire."
 data "\x11"
 data "feed each person 20 bushels of grain per year; less will decrease"
 data "health and loyalty, while more will increase both. a healthy "
@@ -177,7 +179,7 @@ rem  start the report
 rem --------------------------------------------------
 {:start report}
 ? cl$(4);
-? sp$ "o king of shuruppak, i am sorry to report, ";
+? sp$ "o king of sumer, i am sorry to report, ";
 ? "in year" (3513 - \year);
 ? "(" \year "BC )"
 ? hr$ "\x11"
@@ -202,7 +204,7 @@ rem --------------------------------------------------
 rem check plague
 rem --------------------------------------------------
 {:check plague}
-if \plague = 0 then ? s2$ "the streets are clean\x11" :return
+if \plague = 0 then ? s2$ "the streets are beautiful\x11" :return
 ? s2$ "a plague struck your city!\x11"
 ? s2$ "** " \plague "people died\x11"
 return :rem plague done
@@ -211,7 +213,7 @@ rem --------------------------------------------------
 rem check famine
 rem --------------------------------------------------
 {:check famine}
-if \famine = 0 then ? s2$ "the land is now healthy\x11" :return
+if \famine = 0 then ? s2$ "the land is healthy\x11" :return
 ? s2$ "there is famine in the land!\x11" :return 
 return :rem famine done
 

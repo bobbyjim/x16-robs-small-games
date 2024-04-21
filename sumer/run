@@ -1,1 +1,1 @@
-../../x16 -scale 2 -bas sumer.bas -run 
+../../x16 -scale 2 -prg SUMER.PRG -run 
