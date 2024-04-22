@@ -1,15 +1,15 @@
 {:sound-init}
-if peek($400)=0 then load "rf-effects.prg",8,1,$0400
+;if peek($400)=0 then load "rf-effects.prg",8,1,$0400
 return
 
 {:sound-ping}
-sys $0400
+;sys $0400
 t = ti 
 {:swp} if ti < t + 100 goto {:swp}
 return
 
 {:sound-shoot}
-sys $0403
+;sys $0403
 t = ti 
 {:sws} if ti < t + 100 goto {:sws}
 return
@@ -19,7 +19,7 @@ return
 return
 
 {:sound-explode}
-sys $0409
+;sys $0409
 t = ti
 {:swx} if ti < t + 300 goto {:swx}
 return
