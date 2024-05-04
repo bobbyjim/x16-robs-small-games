@@ -1,1 +1,2 @@
-../../../x16 -prg SPELUNK -run
+../../../x16 -prg SPELUNK -run -scale 2
+
